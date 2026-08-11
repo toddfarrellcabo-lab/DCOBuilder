@@ -26,28 +26,22 @@ main{padding:18px 22px 36px}
 .group{background:#fff;border:1px solid var(--line);border-radius:12px;margin-bottom:18px;overflow:hidden}
 .grouphead{padding:14px 16px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap}
 .grouphead h2{font-size:16px;margin:0 0 3px;color:var(--p)}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px;padding:14px}
-.card{border:1px solid var(--line);border-radius:10px;background:#fff;padding:10px;min-width:0}
-.cardtop{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:8px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:12px;padding:14px}
+.card{border:1px solid var(--line);border-radius:10px;background:#fff;padding:10px;min-width:0;display:flex;flex-direction:column;gap:8px}
+.cardtop{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
 .size{font-weight:800;color:var(--p)} .filename{font-family:ui-monospace,Consolas,monospace;font-size:9px;color:var(--muted);overflow-wrap:anywhere}
-.stage-wrap{display:grid;grid-template-columns:minmax(110px,42%) 1fr;gap:12px;align-items:center;background:#faf9fb;border-radius:8px;min-height:220px;padding:12px}
-.stage{position:relative;border:1px solid #bfb8c6;background:#f1eef3;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,.05);justify-self:center}
-.imagezone{flex:1;background:linear-gradient(135deg,#ded9e2,#f0edf2);display:flex;align-items:center;justify-content:center;color:#777;font-size:9px;min-height:20px;text-align:center;padding:3px}
-.imagezone img{width:100%;height:100%;object-fit:cover}
-.messagezone{padding:4px;display:flex;flex-direction:column;gap:3px;background:#fff}
+.stage-wrap{display:flex;align-items:center;justify-content:center;background:#faf9fb;border-radius:8px;height:185px;padding:10px}
+.stage{position:relative;border:2px solid #bfb8c6;background:#eeeaf1;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center;color:#746d78;font-size:9px}
+.imagezone{position:absolute;inset:0;background:linear-gradient(135deg,#ded9e2,#f0edf2);display:flex;align-items:center;justify-content:center;color:#777;font-size:8px;text-align:center;padding:3px}
+.imagezone img{width:100%;height:100%;object-fit:cover;opacity:.75}
+.messagezone{display:none}
 .msg{background:#efe6f4;border-left:3px solid var(--p);height:9px;min-height:6px;padding:0;font-size:0;overflow:hidden}
 .msg.required{background:#eadcf1;border-left-width:4px}
-.logozone{height:14px;background:var(--p);color:#fff;font-size:7px;display:flex;align-items:center;justify-content:center;font-weight:800}
-.legalzone{height:10px;background:#f8f7f9;border-top:1px solid #e4e0e6;font-size:0;overflow:hidden}
+.logozone{position:absolute;left:0;right:0;bottom:10px;height:8px;background:var(--p);font-size:0}
+.legalzone{position:absolute;left:0;right:0;bottom:0;height:10px;background:#f8f7f9;border-top:1px solid #e4e0e6;font-size:0;overflow:hidden}
 
-.contents{min-width:0}
-.contents h4{margin:0 0 6px;color:var(--p);font-size:11px;text-transform:uppercase}
-.contents ol{margin:0 0 8px 18px;padding:0;font-size:10.5px;line-height:1.35}
-.contents li{margin:0 0 4px}
-.contents li.required{font-weight:800;color:var(--p)}
-.legal-copy{font-size:9.5px;color:var(--muted);line-height:1.3;border-top:1px solid var(--line);padding-top:6px}
 
-.meta{margin-top:8px;font-size:10px;color:var(--muted);line-height:1.35}
+.meta{font-size:10px;color:var(--muted);line-height:1.35}
 .drop{margin-top:7px;border-top:1px dashed var(--line);padding-top:6px;font-size:10px}
 .drop strong{color:#6f6875}
 .drop ul{margin:4px 0 0 16px;padding:0}
@@ -57,6 +51,16 @@ main{padding:18px 22px 36px}
 .dot.req{background:#eadcf1;border-left:3px solid var(--p)} .dot.opt{background:#efe6f4;border-left:3px solid var(--p)} .dot.legal{background:#f8f7f9;border:1px solid var(--line)}
 .empty{padding:30px;text-align:center;color:var(--muted)}
 @media(max-width:900px){.controls{grid-template-columns:1fr 1fr}}
+
+.compare-note{font-size:10px;color:var(--muted);line-height:1.3}
+.keepdrop{display:flex;gap:6px;flex-wrap:wrap;font-size:10px}
+.keepdrop span{padding:3px 6px;border-radius:999px;background:#f4f0f6}
+.keepdrop .keep{color:var(--p);font-weight:800}
+.keepdrop .dropchip{color:#777}
+.filename{font-family:ui-monospace,Consolas,monospace;font-size:8.5px;color:var(--muted);overflow-wrap:anywhere;max-width:125px;text-align:right}
+.grouphead .brief{display:none}
+.scale-key{font-size:10px;color:var(--muted);padding:0 14px 12px}
+
 </style>
 </head>
 <body>
@@ -67,7 +71,7 @@ main{padding:18px 22px 36px}
 <div><h1>Creative Output View</h1><div class="sub">See what survives at each size before production.</div></div>
 </div>
 <div class="actions">
-<button onclick="location.href='index.html'">Back to Builder</button>
+<button onclick="location.href='index.html?ts='+Date.now()">Back to Builder</button>
 <button onclick="document.getElementById('csvFile').click()">Load DCO_Builder.csv</button>
 <input id="csvFile" type="file" accept=".csv" style="display:none">
 </div>
@@ -75,12 +79,8 @@ main{padding:18px 22px 36px}
 
 <main>
 <div class="summary">
-<div><span class="pill">SIZE LOGIC PREVIEW</span> Required messages always stay. Optional messages fall off from lowest priority upward as space gets tighter.</div>
-<div class="legend">
-<span><span class="dot req"></span>Required</span>
-<span><span class="dot opt"></span>Priority message</span>
-<span><span class="dot legal"></span>Legal</span>
-</div>
+<div><span class="pill">SIZE LOGIC PREVIEW</span> Compare the actual proportions of each ad size. Shapes are schematic only; the chips below show what content survives.</div>
+<div class="sub">Same-scale comparison by channel</div>
 </div>
 
 <div class="controls">
@@ -146,14 +146,27 @@ function sizeRule(channel,size,density){
 }
 
 function dimensions(channel,size){
-  if(size==='Custom') return [230,150];
+  if(size==='Custom') return [140,90];
   const m=String(size).match(/(\d+)x(\d+)/);
-  if(!m) return [230,150];
-  let w=+m[1], h=+m[2];
-  const maxW=220,maxH=190,scale=Math.min(maxW/w,maxH/h);
-  return [Math.max(70,Math.round(w*scale)),Math.max(38,Math.round(h*scale))];
-}
+  if(!m) return [140,90];
 
+  const w=+m[1], h=+m[2];
+
+  // Use one scale per channel so shapes can be compared to each other,
+  // rather than independently scaling every ad to fill its card.
+  if(channel==='Display'){
+    const scale=Math.min(220/970,145/600);
+    return [Math.max(18,Math.round(w*scale)),Math.max(10,Math.round(h*scale))];
+  }
+
+  if(channel==='Social'){
+    const scale=Math.min(220/1920,145/1080);
+    return [Math.max(40,Math.round(w*scale)),Math.max(40,Math.round(h*scale))];
+  }
+
+  const scale=Math.min(200/w,130/h);
+  return [Math.max(60,Math.round(w*scale)),Math.max(40,Math.round(h*scale))];
+}
 function priorityItems(r){
   const out=[];
   for(let i=1;i<=5;i++){
@@ -182,50 +195,38 @@ function card(r,size){
   const result=retainedFor(r,size);
   const [w,h]=dimensions(r.Channel,size);
 
-  // Shape is only a schematic of relative layout. Actual copy is shown beside it.
   const img=r.Image_Asset
-    ? `<img src="${E(r.Image_Asset)}" onerror="this.parentElement.textContent='IMAGE AREA'">`
-    : 'IMAGE AREA';
+    ? `<img src="${E(r.Image_Asset)}" onerror="this.parentElement.textContent='AD SHAPE'">`
+    : 'AD SHAPE';
 
-  const schematicMsgs=result.keep
-    .map(x=>`<div class="msg ${x.required?'required':''}" title="Priority ${x.priority}"></div>`)
-    .join('');
+  const kept=result.keep.map(x=>x.priority);
+  const dropped=result.dropped.map(x=>x.priority);
 
-  const keptList=result.keep.length
-    ? `<ol>${result.keep.map(x=>`<li class="${x.required?'required':''}">${E(x.text)}${x.required?' (Required)':''}</li>`).join('')}</ol>`
-    : `<div class="sub">No on-ad messages.</div>`;
-
-  const legalText=result.rule.legal==='Full'
-    ? (r.Legal_Full||'Full legal if required')
-    : (r.Legal_Short||'Short legal if required');
-
-  const dropped=result.dropped.length
-    ? `<div class="drop"><strong>Drops at this size:</strong><ul>${result.dropped.map(x=>`<li>${x.priority}. ${E(x.text)}</li>`).join('')}</ul></div>`
-    : `<div class="drop"><strong>No priority messages dropped.</strong></div>`;
+  const keepText=kept.length ? `Keeps ${kept.join(', ')}` : 'No messages';
+  const dropText=dropped.length ? `Drops ${dropped.join(', ')}` : 'Drops none';
 
   return `<div class="card">
     <div class="cardtop">
-      <div class="size">${E(size)}</div>
+      <div>
+        <div class="size">${E(size)}</div>
+        <div class="compare-note">${w}×${h}px preview</div>
+      </div>
       <div class="filename">${E(filenameFor(r,size))}</div>
     </div>
 
     <div class="stage-wrap">
       <div class="stage" style="width:${w}px;height:${h}px">
         <div class="imagezone">${img}</div>
-        <div class="messagezone">${schematicMsgs}</div>
-        <div class="logozone">LOGO</div>
+        <div class="logozone"></div>
         <div class="legalzone"></div>
-      </div>
-
-      <div class="contents">
-        <h4>On-ad content</h4>
-        ${keptList}
-        <div class="legal-copy"><strong>${E(result.rule.legal)} Legal:</strong> ${E(legalText)}</div>
       </div>
     </div>
 
-    <div class="meta">Message capacity: <strong>${result.rule.cap}</strong></div>
-    ${dropped}
+    <div class="keepdrop">
+      <span class="keep">${keepText}</span>
+      <span>${E(result.rule.legal)} legal</span>
+      <span class="dropchip">${dropText}</span>
+    </div>
   </div>`;
 }
 function group(r){
@@ -235,8 +236,8 @@ function group(r){
     <div class="grouphead">
       <div><h2>${E(r.Record_ID)} · ${E(r.Execution)} — ${E(r.Variation)}</h2>
       <div class="sub">${E(r.Channel)} · ${E(r.Pillar)} · ${E(r.Status)}</div></div>
-      <div class="sub">${E(r.Creative_Brief||'')}</div>
     </div>
+    <div class="scale-key">Shapes use the same scale within each channel so the size and aspect-ratio differences are directly comparable.</div>
     <div class="grid">${sizes.map(s=>card(r,s)).join('')}</div>
   </section>`;
 }
@@ -277,6 +278,24 @@ if(!hasWorkingData){
     .catch(()=>{});
 }
 render();
+
+function reloadWorkingData(){
+  try{
+    const saved=localStorage.getItem(DATA_KEY);
+    if(saved){
+      const parsed=JSON.parse(saved);
+      if(Array.isArray(parsed) && parsed.length){
+        data=parsed;
+      }
+    }
+  }catch(e){}
+  render();
+}
+window.addEventListener('pageshow',()=>reloadWorkingData());
+window.addEventListener('storage',e=>{
+  if(e.key===DATA_KEY) reloadWorkingData();
+});
+
 </script>
 </body>
 </html>

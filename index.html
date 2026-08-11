@@ -62,7 +62,7 @@ label{display:block;margin-bottom:4px;font-size:10px;font-weight:800;text-transf
 <button onclick="document.getElementById('csvFile').click()">Upload DCO_Builder.csv</button><input id="csvFile" class="hidden" type="file" accept=".csv">
 <button onclick="addRow()">+ Add Execution</button>
 <button onclick="generateCurrentReport()">Generate Current Report</button>
-<button onclick="persistWorkingData();location.href='outputs.html'">Creative Output View</button>
+<button onclick="goToOutputs()">Creative Output View</button>
 <button class="primary" onclick="downloadCSV()">Download DCO_Builder.csv</button>
 </div>
 </div></header>
@@ -178,6 +178,11 @@ function persistWorkingData(){
     localStorage.setItem(DATA_KEY,JSON.stringify(data));
     localStorage.setItem(DATA_KEY+'_NEXT',String(nextSequence));
   }catch(e){}
+}
+
+function goToOutputs(){
+  persistWorkingData();
+  location.href='outputs.html?ts='+Date.now();
 }
 function restoreWorkingData(){
   try{
@@ -330,5 +335,10 @@ function generateCurrentReport(){
  w.document.close();
 }
 restoreWorkingData();initSequence();persistWorkingData();render();
+window.addEventListener('pageshow',()=>{
+  restoreWorkingData();
+  initSequence();
+  render();
+});
 </script>
 </body></html>
