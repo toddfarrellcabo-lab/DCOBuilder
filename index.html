@@ -62,7 +62,7 @@ label{display:block;margin-bottom:4px;font-size:10px;font-weight:800;text-transf
 <button onclick="document.getElementById('csvFile').click()">Upload DCO_Builder.csv</button><input id="csvFile" class="hidden" type="file" accept=".csv">
 <button onclick="addRow()">+ Add Execution</button>
 <button onclick="generateCurrentReport()">Generate Current Report</button>
-<button onclick="location.href='outputs.html'">Creative Output View</button>
+<button onclick="persistWorkingData();location.href='outputs.html'">Creative Output View</button>
 <button class="primary" onclick="downloadCSV()">Download DCO_Builder.csv</button>
 </div>
 </div></header>
@@ -170,7 +170,26 @@ const SEED=[{"Record_ID": "DCO-0001", "Sequence_Next": "15", "Execution": "Fiber
 const PILLARS=['Technology Leadership','Value and Included Benefits','Competitive Advantage','Market Events','Network Performance'];
 const EXEC_MAP={"Fiber Technology":"FibTech","Equipment Included":"Eq","Competitive Differentiation":"Comp","Competitor Outage Response":"Outage","Mobile Differentiator":"Mob","2 Gig Targeting":"2Gig","Superior Network Performance":"NetPerf"};
 const VAR_MAP={"Fiber":"Fib","Equipment Included":"Eq","eero vs Fiber Competitors":"Eero","FWA 5G":"FWA5G","MetroNet":"Met_Vin","CenturyLink":"Ctl_Boi","Plateau":"Plat_Ros","DSL":"DSL","Starlink":"Star","Competitor Outage":"Resp","Mobile Upgrade":"Upg","Mobile Three Benefits":"3Ben","2 Gig":"2Gig","Opensignal Network Leadership":"Open"};
+const DATA_KEY='DCO_BUILDER_WORKING_DATA';
 let data=JSON.parse(JSON.stringify(SEED)), idx=-1, tempImageURL='', nextSequence=1, sortKey='Record_ID', sortDir=1;
+
+function persistWorkingData(){
+  try{
+    localStorage.setItem(DATA_KEY,JSON.stringify(data));
+    localStorage.setItem(DATA_KEY+'_NEXT',String(nextSequence));
+  }catch(e){}
+}
+function restoreWorkingData(){
+  try{
+    const saved=localStorage.getItem(DATA_KEY);
+    if(saved){
+      const parsed=JSON.parse(saved);
+      if(Array.isArray(parsed) && parsed.length) data=parsed;
+    }
+    const savedNext=parseInt(localStorage.getItem(DATA_KEY+'_NEXT')||'0',10);
+    if(savedNext>0) nextSequence=Math.max(nextSequence,savedNext);
+  }catch(e){}
+}
 const MF=[1,2,3,4,5].map(i=>'Message_'+i), RF=[1,2,3,4,5].map(i=>'Message_'+i+'_Required');
 const SIZESETS={
   'Display':['Full Set','160x600','300x50','300x250','300x600','320x50','728x90','970x90','970x250'],
@@ -190,7 +209,7 @@ function initSequence(){
 function allocateID(){
   const id=`DCO-${String(nextSequence).padStart(4,'0')}`;
   nextSequence++;
-  localStorage.setItem('dco_next_sequence',String(nextSequence));
+  localStorage.setItem('dco_next_sequence',String(nextSequence));persistWorkingData();
   return id;
 }
 function filenameSafe(s){return String(s||'').trim().replace(/-/g,' ').replace(/[^A-Za-z0-9 ]+/g,' ').replace(/\s+/g,'_').replace(/^_+|_+$/g,'')}
@@ -260,10 +279,11 @@ function save(){
  if(r.Status==='Current')r.End_Date='';
  Object.keys(r).forEach(k=>{if(typeof r[k]==='string')r[k]=dataMergeSafe(r[k])});
  if(idx<0)data.push(r);else data[idx]=r;
- document.getElementById('dirty').textContent='Edited — download DCO_Builder.csv to keep changes';closeM();render()
+ persistWorkingData();
+ document.getElementById('dirty').textContent='Saved in this browser — download DCO_Builder.csv to keep a file copy';closeM();render()
 }
-function dup(i){let r=JSON.parse(JSON.stringify(data[i]));r.Record_ID=allocateID();r.Sequence_Next='';r.Variation=r.Variation+' Copy';r.Variation_Code=generateCode(r.Variation,VAR_MAP);data.splice(i+1,0,r);render()}
-function del(i){if(confirm('Delete this execution? Its Record ID will not be reused.')){data.splice(i,1);render()}}
+function dup(i){let r=JSON.parse(JSON.stringify(data[i]));r.Record_ID=allocateID();r.Sequence_Next='';r.Variation=r.Variation+' Copy';r.Variation_Code=generateCode(r.Variation,VAR_MAP);data.splice(i+1,0,r);persistWorkingData();render()}
+function del(i){if(confirm('Delete this execution? Its Record ID will not be reused.')){data.splice(i,1);persistWorkingData();render()}}
 function dataMergeSafe(v){
  v=String(v??'').replace(/\r?\n/g,' ').replace(/[\t ]+/g,' ').trim();
  return v;
@@ -277,7 +297,7 @@ function downloadCSV(){
  let t=[COLS.join(','),...data.map(r=>COLS.map(c=>ce(r[c]||'')).join(','))].join('\n'),b=new Blob(['\ufeff'+t],{type:'text/csv'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='DCO_Builder.csv';a.click();URL.revokeObjectURL(a.href);document.getElementById('dirty').textContent='Downloaded'
 }
 function parse(t){let R=[],r=[],f='',q=false;for(let i=0;i<t.length;i++){let c=t[i];if(q){if(c==='"'&&t[i+1]==='"'){f+='"';i++}else if(c==='"')q=false;else f+=c}else{if(c==='"')q=true;else if(c===','){r.push(f);f=''}else if(c==='\n'){r.push(f.replace(/\r$/,''));R.push(r);r=[];f=''}else f+=c}}if(f.length||r.length){r.push(f);R.push(r)}let h=(R.shift()||[]).map(x=>x.replace(/^\ufeff/,''));return R.filter(x=>x.some(v=>v)).map(x=>Object.fromEntries(h.map((c,i)=>[c,x[i]??''])))}
-document.getElementById('csvFile').addEventListener('change',async e=>{let f=e.target.files[0];if(!f)return;let p=parse(await f.text()),missing=COLS.filter(c=>!(c in (p[0]||{})));if(missing.length)return alert('Wrong CSV structure. Missing: '+missing.join(', '));data=p.map(r=>Object.fromEntries(COLS.map(c=>[c,r[c]??''])));initSequence();render();document.getElementById('dirty').textContent='Loaded uploaded CSV';e.target.value=''});
+document.getElementById('csvFile').addEventListener('change',async e=>{let f=e.target.files[0];if(!f)return;let p=parse(await f.text()),missing=COLS.filter(c=>!(c in (p[0]||{})));if(missing.length)return alert('Wrong CSV structure. Missing: '+missing.join(', '));data=p.map(r=>Object.fromEntries(COLS.map(c=>[c,r[c]??''])));initSequence();persistWorkingData();render();document.getElementById('dirty').textContent='Loaded uploaded CSV';e.target.value=''});
 
 function generateCurrentReport(){
  const current=data.filter(r=>r.Status==='Current');
@@ -309,6 +329,6 @@ function generateCurrentReport(){
  </style></head><body>${pages}<script>window.onload=()=>setTimeout(()=>window.print(),300)<\/script></body></html>`);
  w.document.close();
 }
-initSequence();render();
+restoreWorkingData();initSequence();persistWorkingData();render();
 </script>
 </body></html>
