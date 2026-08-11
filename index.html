@@ -18,7 +18,7 @@ main{padding:18px 22px 34px}
 .source{background:#fff;border:1px solid var(--line);border-radius:10px;padding:11px 13px;margin-bottom:12px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .pill{background:var(--soft);color:var(--p);padding:5px 9px;border-radius:999px;font-size:10px;font-weight:800}
 .toolbar{display:flex;gap:8px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px;margin-bottom:10px;align-items:center}
-.toolbar input{flex:1}
+.toolbar input{flex:1}.mobile-view-note{display:none}
 input,select,textarea{width:100%;border:1px solid var(--line);border-radius:7px;padding:8px 9px;font:inherit;background:#fff}
 textarea{min-height:86px;resize:vertical}
 .tablewrap{background:#fff;border:1px solid var(--line);border-radius:10px;overflow:auto;max-height:72vh}
@@ -48,6 +48,50 @@ label{display:block;margin-bottom:4px;font-size:10px;font-weight:800;text-transf
 .logo{background:#f8f5f9;border:1px solid var(--line);border-radius:8px;padding:11px} .logo-options{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:9px} .logo-card{background:#fff;border:1px solid var(--line);border-radius:7px;padding:8px;text-align:center} .logo-card.dark{background:#333} .logo-card img{max-width:100%;height:28px;object-fit:contain} .logo-card small{display:block;font-size:9px;color:var(--muted);margin-top:5px} .logo-card.dark small{color:#ddd}
 .logicbox{background:#faf8fb;border:1px solid var(--line);border-radius:8px;padding:10px;font-size:11px;line-height:1.45}
 .hidden{display:none!important}
+
+@media(max-width:760px){
+  header{position:static;padding:12px}
+  .top{align-items:flex-start}
+  .brand-wrap{width:100%;display:grid;grid-template-columns:auto auto 1fr;gap:10px;align-items:center}
+  .brand-logo{height:30px;max-width:150px}
+  .header-mascot{height:48px;max-width:85px;margin:-4px 0 -8px}
+  h1{font-size:20px}
+  .brand-wrap .sub{font-size:11px;line-height:1.25}
+  .actions{width:100%;display:grid;grid-template-columns:1fr 1fr;gap:7px}
+  .actions button{width:100%;font-size:12px;padding:8px 9px}
+  .actions .primary{grid-column:span 2}
+  main{padding:12px}
+  .source{padding:10px}
+  .source>div:last-child{font-size:11px;line-height:1.35}
+  .toolbar{padding:9px;display:block}
+  .toolbar input{margin-bottom:6px}
+  .desktop-sort-note{display:none}
+  .mobile-view-note{display:block}
+  .tablewrap{overflow:visible;max-height:none;border-radius:10px}
+  table{min-width:0;width:100%;table-layout:fixed}
+  th,td{font-size:11px;padding:8px 7px}
+  th{position:static}
+  /* Mobile keeps only: ID, Actions, Execution, Variation, Status */
+  th:nth-child(5),td:nth-child(5),
+  th:nth-child(6),td:nth-child(6),
+  th:nth-child(7),td:nth-child(7),
+  th:nth-child(9),td:nth-child(9),
+  th:nth-child(10),td:nth-child(10),
+  th:nth-child(11),td:nth-child(11),
+  th:nth-child(12),td:nth-child(12),
+  th:nth-child(13),td:nth-child(13),
+  th:nth-child(14),td:nth-child(14){display:none}
+  th:nth-child(1),td:nth-child(1){width:16%}
+  th:nth-child(2),td:nth-child(2){width:25%}
+  th:nth-child(3),td:nth-child(3){width:26%}
+  th:nth-child(4),td:nth-child(4){width:20%}
+  th:nth-child(8),td:nth-child(8){width:13%}
+  .rowbtns{white-space:normal;display:flex;flex-direction:column;gap:4px}
+  .rowbtns button{width:100%;margin:0;padding:5px 4px;font-size:10px}
+  .record-id{font-size:9px}
+  .code{font-size:8px;display:inline-block;margin-top:2px}
+}
+
 @media(max-width:900px){.toolbar{flex-direction:column}.grid{grid-template-columns:1fr}.wide,.two,.section{grid-column:span 1}.msg{grid-template-columns:30px 1fr}.assetbox{grid-template-columns:1fr}}
 </style>
 </head>
@@ -73,7 +117,8 @@ label{display:block;margin-bottom:4px;font-size:10px;font-weight:800;text-transf
 
 <div class="toolbar">
 <input id="search" placeholder="Search..." oninput="render()">
-<div class="sub">Click any table heading to sort.</div>
+<div class="sub desktop-sort-note">Click any table heading to sort.</div>
+<div class="sub mobile-view-note">Mobile view shows the key fields only. Edit a row to see the full record.</div>
 </div>
 
 <div class="tablewrap"><table><thead><tr>

@@ -50,6 +50,25 @@ main{padding:18px 22px 36px}
 .dot{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:4px;vertical-align:-1px}
 .dot.req{background:#eadcf1;border-left:3px solid var(--p)} .dot.opt{background:#efe6f4;border-left:3px solid var(--p)} .dot.legal{background:#f8f7f9;border:1px solid var(--line)}
 .empty{padding:30px;text-align:center;color:var(--muted)}
+@media(max-width:760px){
+  header{position:static;padding:12px}
+  .top{align-items:flex-start}
+  .brand{width:100%}
+  .brand img.logo{height:30px;max-width:150px}
+  .brand img.mascot{height:46px;max-width:80px}
+  h1{font-size:20px}
+  .actions{width:100%;display:grid;grid-template-columns:1fr 1fr}
+  .actions button{width:100%;font-size:12px;padding:8px}
+  main{padding:12px}
+  .controls{grid-template-columns:1fr}
+  .grid{grid-template-columns:1fr 1fr}
+  .grouphead .sub{font-size:11px}
+  .stage-wrap{height:150px}
+  .filename{display:none}
+}
+@media(max-width:480px){
+  .grid{grid-template-columns:1fr}
+}
 @media(max-width:900px){.controls{grid-template-columns:1fr 1fr}}
 
 .compare-note{font-size:10px;color:var(--muted);line-height:1.3}
