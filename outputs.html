@@ -80,6 +80,25 @@ main{padding:18px 22px 36px}
 .grouphead .brief{display:none}
 .scale-key{font-size:10px;color:var(--muted);padding:0 14px 12px}
 
+
+.content-options{border-top:1px solid var(--line);padding-top:8px}
+.content-label{font-size:9px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.03em;margin-bottom:5px}
+.content-list{margin:0 0 7px 20px;padding:0;font-size:10.5px;line-height:1.3}
+.content-list li{margin:0 0 5px;padding-left:2px}
+.content-list li.required{font-weight:800;color:var(--p)}
+.required-tag{display:inline-block;margin-left:4px;padding:1px 4px;border-radius:999px;background:var(--soft);font-size:8px;text-transform:uppercase}
+.legal-pill{display:inline-block;padding:3px 7px;border-radius:999px;background:#f4f0f6;font-size:9.5px;margin-bottom:5px}
+.dropped-list{font-size:9.5px;color:var(--muted);margin-top:3px}
+.dropped-list summary{cursor:pointer}
+.dropped-list ol{margin:5px 0 0 20px;padding:0}
+.dropped-list li{margin-bottom:3px}
+.drop-none{font-size:9px;color:var(--muted);margin-top:2px}
+@media(max-width:760px){
+  .content-list{font-size:12px;line-height:1.35}
+  .content-label{font-size:10px}
+  .legal-pill,.dropped-list,.drop-none{font-size:10px}
+}
+
 </style>
 </head>
 <body>
@@ -218,11 +237,13 @@ function card(r,size){
     ? `<img src="${E(r.Image_Asset)}" onerror="this.parentElement.textContent='AD SHAPE'">`
     : 'AD SHAPE';
 
-  const kept=result.keep.map(x=>x.priority);
-  const dropped=result.dropped.map(x=>x.priority);
+  const keptList=result.keep.length
+    ? `<ol class="content-list">${result.keep.map(x=>`<li class="${x.required?'required':''}">${E(x.text)}${x.required?' <span class="required-tag">Required</span>':''}</li>`).join('')}</ol>`
+    : `<div class="compare-note">No on-ad messages.</div>`;
 
-  const keepText=kept.length ? `Keeps ${kept.join(', ')}` : 'No messages';
-  const dropText=dropped.length ? `Drops ${dropped.join(', ')}` : 'Drops none';
+  const droppedList=result.dropped.length
+    ? `<details class="dropped-list"><summary>${result.dropped.length} lower-priority option${result.dropped.length===1?'':'s'} dropped</summary><ol>${result.dropped.map(x=>`<li>${E(x.text)}</li>`).join('')}</ol></details>`
+    : `<div class="drop-none">No lower-priority options dropped.</div>`;
 
   return `<div class="card">
     <div class="cardtop">
@@ -241,10 +262,11 @@ function card(r,size){
       </div>
     </div>
 
-    <div class="keepdrop">
-      <span class="keep">${keepText}</span>
-      <span>${E(result.rule.legal)} legal</span>
-      <span class="dropchip">${dropText}</span>
+    <div class="content-options">
+      <div class="content-label">Content options in priority order</div>
+      ${keptList}
+      <div class="legal-pill">${E(result.rule.legal)} legal</div>
+      ${droppedList}
     </div>
   </div>`;
 }
