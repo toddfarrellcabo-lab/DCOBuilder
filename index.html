@@ -13,7 +13,7 @@ header{position:sticky;top:0;z-index:10;background:#fff;border-bottom:1px solid 
 .header-mascot{height:58px;max-width:120px;object-fit:contain;object-position:center bottom;display:block;margin:-8px 0 -14px 0}
 h1{margin:0;color:var(--p);font-size:22px} .sub{font-size:12px;color:var(--muted);margin-top:3px}
 button{border:1px solid var(--line);background:#fff;border-radius:8px;padding:9px 12px;font-weight:700;cursor:pointer}
-button.primary{background:var(--p);border-color:var(--p);color:#fff} button.danger{color:var(--danger)} .actions{display:flex;gap:8px;flex-wrap:wrap}
+button.primary{background:var(--p);border-color:var(--p);color:#fff} button:disabled{opacity:.5;cursor:not-allowed;background:#f2f0f4;color:#777;border-color:#d8d3dc} button.danger{color:var(--danger)} .actions{display:flex;gap:8px;flex-wrap:wrap}
 main{padding:18px 22px 34px}
 .source{background:#fff;border:1px solid var(--line);border-radius:10px;padding:11px 13px;margin-bottom:12px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .pill{background:var(--soft);color:var(--p);padding:5px 9px;border-radius:999px;font-size:10px;font-weight:800}
@@ -68,7 +68,7 @@ label{display:block;margin-bottom:4px;font-size:10px;font-weight:800;text-transf
 
 <main>
 <div class="source"><div><span class="pill">SOURCE CSV</span> <strong>DCO_Builder.csv</strong> <span class="sub" id="dirty">Loaded</span></div>
-<div class="sub">Record IDs are permanent. Images upload directly to /uploads on the server. Spaces become underscores inside filename segments; hyphens separate filename segments.</div></div>
+<div class="sub">Record IDs are permanent. Image upload is coming soon; existing image paths still render. Spaces become underscores inside filename segments; hyphens separate filename segments.</div></div>
 
 <div class="toolbar">
 <input id="search" placeholder="Search..." oninput="render()">
@@ -123,9 +123,15 @@ label{display:block;margin-bottom:4px;font-size:10px;font-weight:800;text-transf
 
 <div class="wide assetbox">
 <div id="assetPreview" class="asset-preview">No image selected</div>
-<div><label>Image Asset</label><input data-f="Image_Asset" placeholder="uploads/example.jpg" readonly>
-<div class="asset-actions"><button type="button" onclick="document.getElementById('imageFile').click()">Choose Image</button><input id="imageFile" class="hidden" type="file" accept="image/*"><button type="button" onclick="clearImage()">Clear</button></div>
-<div class="asset-tip" id="uploadTip">Choose an image and it will upload directly to the server's <strong>/uploads</strong> folder. The returned path is stored in the CSV and rendered as a 50 x 50 px thumbnail in the dashboard.</div>
+<div>
+  <label>Image Asset</label>
+  <input data-f="Image_Asset" placeholder="uploads/example.jpg" readonly>
+  <div class="asset-actions">
+    <button type="button" disabled aria-disabled="true" title="Image uploads are coming soon">Upload Image — Coming Soon</button>
+  </div>
+  <div class="asset-tip" id="uploadTip">
+    Image uploads are <strong>coming soon</strong>. Existing image paths in the CSV will still render in the dashboard, but users cannot upload or replace images from this site yet.
+  </div>
 </div></div>
 
 <div class="section"><div class="section-title">Supporting Copy <span class="sub">(not on ad)</span></div>
@@ -243,35 +249,12 @@ function addRow(){idx=-1;let r=Object.fromEntries(COLS.map(c=>[c,'']));r.Record_
 function closeM(){if(tempImageURL)URL.revokeObjectURL(tempImageURL);tempImageURL='';document.getElementById('modal').classList.remove('open')}
 function move(i,d){let j=i+d;if(j<0||j>4)return;let t=[...document.querySelectorAll('.mtext')],r=[...document.querySelectorAll('.mreq')];[t[i].value,t[j].value]=[t[j].value,t[i].value];let b=r[i].checked;r[i].checked=r[j].checked;r[j].checked=b}
 function clearImage(){el('Image_Asset').value='';if(tempImageURL)URL.revokeObjectURL(tempImageURL);tempImageURL='';setImagePreview('')}
-async function uploadImageToServer(file){
- const form=new FormData();
- form.append('image',file);
- const res=await fetch('/api/upload',{method:'POST',body:form});
- if(!res.ok){
-   let msg='Upload failed.';
-   try{const j=await res.json();if(j.error)msg=j.error}catch(_){}
    throw new Error(msg);
  }
  const payload=await res.json();
  if(!payload.path)throw new Error('Upload succeeded but no image path was returned.');
  return payload.path;
 }
-document.getElementById('imageFile').addEventListener('change',async e=>{
- const f=e.target.files[0];if(!f)return;
- const tip=document.getElementById('uploadTip');
- tip.textContent='Uploading image...';
- try{
-   const path=await uploadImageToServer(f);
-   el('Image_Asset').value=path;
-   tempImageURL='';
-   setImagePreview(path);
-   tip.innerHTML='Saved to <strong>'+E(path)+'</strong>.';
- }catch(err){
-   tip.innerHTML='<strong>Upload failed:</strong> '+E(err.message);
-   alert(err.message);
- }
- e.target.value='';
-});
 function save(){
  let r={};COLS.forEach(c=>r[c]=el(c)?el(c).value:'');r.Record_ID=el('Record_ID').value;r.Execution_Code=document.getElementById('execCodePreview').textContent;r.Variation_Code=document.getElementById('varCodePreview').textContent;
  let mt=[...document.querySelectorAll('.mtext')],mr=[...document.querySelectorAll('.mreq')];MF.forEach((f,i)=>{r[f]=mt[i].value;r[RF[i]]=mr[i].checked?'1':'0'});
