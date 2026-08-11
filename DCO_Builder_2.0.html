@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DCO Builder 2.0</title>
+<link rel="stylesheet" href="DCO_Builder_2.0.css">
+</head>
+<body>
+<header>
+  <div class="header-row">
+    <div class="brand-zone">
+      <img class="brand-logo" src="assets/Sparklight(R)-reverse-rgb.png" alt="Sparklight" onerror="this.src='assets/Sparklight(R)-purple-rgb.png'">
+      <div id="mascotSlot" class="mascot-slot"><img id="mascotImg" alt="Header mascot"></div>
+      <div class="title-wrap"><h1>DCO Builder 2.0</h1><div class="sub">Plan. Build. Launch.</div></div>
+    </div>
+    <div class="actions">
+      <button onclick="document.getElementById('csvFile').click()">Upload DCO_Builder.csv</button>
+      <input id="csvFile" class="hidden" type="file" accept=".csv">
+      <button onclick="document.getElementById('mascotFile').click()">Header Mascot</button>
+      <input id="mascotFile" class="hidden" type="file" accept="image/*">
+      <button onclick="clearMascot()">Clear Mascot</button>
+      <button onclick="addRow()">+ New Creative</button>
+      <button class="primary" onclick="downloadCSV()">Download DCO_Builder.csv</button>
+    </div>
+  </div>
+</header>
+
+<main>
+<div class="source">
+  <div><span class="pill">SOURCE CSV</span> <strong>DCO_Builder.csv</strong> <span class="sub" id="dirty">Loaded</span></div>
+  <div class="sub">Spaces become underscores inside filename segments. Hyphens separate filename segments.</div>
+</div>
+
+<div class="toolbar">
+  <input id="search" placeholder="Search executions, briefs, messages, markets..." oninput="render()">
+  <select id="fc" onchange="render()"><option value="">All channels</option></select>
+  <select id="fp" onchange="render()"><option value="">All pillars</option></select>
+  <select id="fs" onchange="render()"><option value="">All statuses</option></select>
+</div>
+
+<div class="tablewrap"><table>
+<thead><tr>
+<th style="width:130px">Actions</th>
+<th style="width:150px">Execution</th>
+<th style="width:120px">Variation</th>
+<th style="width:80px">Channel</th>
+<th style="width:75px">Size</th>
+<th style="width:145px">Pillar</th>
+<th style="width:95px">Status</th>
+<th style="width:215px">Creative Brief</th>
+<th style="width:215px">Image Description / Prompt</th>
+<th style="width:110px">Image</th>
+<th style="width:215px">Supporting Copy</th>
+<th style="width:280px">Details</th>
+</tr></thead>
+<tbody id="tbody"></tbody>
+</table></div>
+</main>
+
+<div class="modal" id="modal"><div class="dialog">
+<div class="dhead">
+  <div><strong id="title">Edit Creative Execution</strong><div class="sub">Human-friendly names in front. Codes and proposed filenames are generated automatically.</div></div>
+  <button onclick="closeM()">✕</button>
+</div>
+<div class="dbody"><div class="grid">
+
+<div><label>Execution</label><input data-f="Execution" oninput="autoCodes()"></div>
+<div><label>Variation</label><input data-f="Variation" oninput="autoCodes()"></div>
+<div class="codebox"><label>Generated Codes</label><div class="row"><span class="code" id="execCodePreview"></span><span class="code" id="varCodePreview"></span></div></div>
+
+<div><label>Channel</label><select data-f="Channel" onchange="refreshSizes()"><option>Display</option><option>Social</option><option>Landing Page</option><option>Email</option></select></div>
+<div><label>Size</label><select data-f="Size" onchange="updateFilenamePreview()"></select><div id="sizeNote" class="size-note"></div></div>
+<div><label>Status</label><select data-f="Status" onchange="statusChanged()"></select></div>
+
+<div><label>Pillar</label><select data-f="Pillar"></select></div>
+<div><label>Category</label><input data-f="Category"></div>
+<div><label>Market Zip</label><input data-f="Market_Zip"></div>
+
+<div class="two"><label>Target</label><input data-f="Target"></div>
+<div><label>Offer</label><input data-f="Offer"></div>
+
+<div id="startWrap" class="lifecycle hidden"><label>Start Date</label><input data-f="Start_Date" type="date"><div class="sub">Required when Status is Future.</div></div>
+<div id="endWrap" class="lifecycle hidden"><label>End Date</label><input data-f="End_Date" type="date"><div class="sub">Required when Status is Retired.</div></div>
+
+<div class="section"><div class="section-title">Creative Brief</div></div>
+<div class="wide"><textarea data-f="Creative_Brief"></textarea></div>
+
+<div class="section"><div class="section-title">Image Description / Prompt</div></div>
+<div class="wide"><textarea data-f="Image_Description_Prompt"></textarea></div>
+
+<div class="wide assetbox">
+  <div id="assetPreview" class="asset-preview">No image selected</div>
+  <div>
+    <label>Image Asset</label>
+    <input data-f="Image_Asset" placeholder="assets/example.jpg">
+    <div class="asset-actions">
+      <button type="button" onclick="document.getElementById('imageFile').click()">Choose Image</button>
+      <input id="imageFile" class="hidden" type="file" accept="image/*">
+      <button type="button" onclick="clearImage()">Clear</button>
+    </div>
+    <div class="asset-tip">The CSV stores the relative path as <strong>assets/filename.ext</strong>. Keep the actual file in the project's assets folder.</div>
+  </div>
+</div>
+
+<div class="section"><div class="section-title">Supporting Copy <span class="sub">(not on ad)</span></div>
+<div class="sub">Accompanying copy used outside the image file, such as the post text or caption that runs with a Social ad. It is delivered with the creative but is not placed on the image itself.</div></div>
+<div class="wide"><textarea data-f="Supporting_Copy"></textarea></div>
+
+<div class="section"><div class="section-title">Message Priority <span class="sub">(on-ad messages)</span></div>
+<div class="sub">Required messages never drop. Remaining messages survive according to priority and available space.</div></div>
+<div class="wide"><div id="msgs" class="msglist"></div></div>
+
+<div class="section"><div class="section-title">Always Reserved Logo Area</div></div>
+<div class="wide logo">
+  <strong>Sparklight logo</strong> — template space is always reserved.
+  <div class="logo-options">
+    <div class="logo-card"><img src="assets/Sparklight(R)-black-rgb.png"><small>Black</small></div>
+    <div class="logo-card"><img src="assets/Sparklight(R)-gray-rgb.png"><small>Gray</small></div>
+    <div class="logo-card"><img src="assets/Sparklight(R)-purple-rgb.png"><small>Purple</small></div>
+    <div class="logo-card dark"><img src="assets/Sparklight(R)-reverse-rgb.png"><small>Reverse</small></div>
+  </div>
+</div>
+
+<div class="section"><div class="section-title">Legal</div></div>
+<div class="wide"><label>Full Legal</label><textarea data-f="Legal_Full"></textarea></div>
+<div class="wide"><label>Short Legal</label><textarea data-f="Legal_Short"></textarea></div>
+<div class="wide"><label>Approval Notes</label><textarea data-f="Approval_Notes"></textarea></div>
+
+<div class="section"><div class="section-title">Proposed Filename Preview</div><div class="sub">Format: DCO-Channel_Size-Execution-Variation. If Execution and Variation codes duplicate, the duplicate Variation segment is omitted.</div></div>
+<div class="wide logicbox" id="filenamePreview"></div>
+
+</div></div>
+<div class="dfoot"><button onclick="closeM()">Cancel</button><button class="primary" onclick="save()">Save Creative</button></div>
+</div></div>
+
+<script>
+const SEED=[{"Execution": "Fiber Technology", "Execution_Code": "FibTech", "Variation": "Fiber", "Variation_Code": "Fib", "Pillar": "Technology Leadership", "Category": "Fiber Technology", "Target": "Fiber enabled expansion markets and ZIP codes over indexing to fiber", "Market_Zip": "TBD", "Offer": "TBD", "Channel": "Social", "Size": "Full Set", "Status": "Current", "Start_Date": "", "End_Date": "", "Creative_Brief": "Show a modern connected home with a clear premium Wi-Fi cue. Make Fiber and premium eero Wi-Fi the hero. Keep the layout simple and flexible for market localization. Use the supplied headline and copy. Offer remains TBD.", "Image_Description_Prompt": "Modern connected home interior with a premium Wi-Fi device visible in the environment. Warm, natural, contemporary residential lifestyle photography with room for branding and copy.", "Image_Asset": "", "Supporting_Copy": "Experience Sparklight Fiber with Better Wi-Fi.", "Message_1": "Fiber Internet. Premium eero Wi-Fi.", "Message_1_Required": "1", "Message_2": "", "Message_2_Required": "0", "Message_3": "", "Message_3_Required": "0", "Message_4": "", "Message_4_Required": "0", "Message_5": "", "Message_5_Required": "0", "Message_6": "", "Message_6_Required": "0", "Legal_Full": "", "Legal_Short": "", "Approval_Notes": "Localize by market name where feasible."}, {"Execution": "Equipment Included", "Execution_Code": "Eq", "Variation": "Equipment Included", "Variation_Code": "Eq", "Pillar": "Value and Included Benefits", "Category": "Equipment Included", "Target": "Rate cards that include equipment", "Market_Zip": "TBD", "Offer": "TBD", "Channel": "Social", "Size": "Full Set", "Status": "Current", "Start_Date": "", "End_Date": "", "Creative_Brief": "Focus on the eero device in a clean connected home setting. Visually communicate that premium Wi-Fi equipment is included without adding unapproved pricing. Use the supplied headline and copy. Only deploy where the applicable rate card includes equipment. Offer remains TBD.", "Image_Description_Prompt": "Clean close-up or lifestyle view of an eero device in a modern home. Premium but approachable product photography with a simple uncluttered setting.", "Image_Asset": "", "Supporting_Copy": "No extra monthly equipment fees.", "Message_1": "Powerful eero Wi-Fi. Included.", "Message_1_Required": "1", "Message_2": "", "Message_2_Required": "0", "Message_3": "", "Message_3_Required": "0", "Message_4": "", "Message_4_Required": "0", "Message_5": "", "Message_5_Required": "0", "Message_6": "", "Message_6_Required": "0", "Legal_Full": "", "Legal_Short": "", "Approval_Notes": ""}, {"Execution": "Competitive Differentiation", "Execution_Code": "Comp", "Variation": "eero vs Fiber Competitors", "Variation_Code": "Eero", "Pillar": "Competitive Advantage", "Category": "Competitive Differentiation", "Target": "eero vs ATT Fiber and CenturyLink ZIP codes", "Market_Zip": "TBD", "Offer": "TBD", "Channel": "Social", "Size": "Full Set", "Status": "Current", "Start_Date": "", "End_Date": "", "Creative_Brief": "Build a Wi-Fi quality focused competitive concept for AT&T Fiber and CenturyLink ZIP codes. Make premium eero Wi-Fi the visual proof point with a relatable connected home scene. Avoid inventing a direct speed claim. Use the supplied headline and copy. Offer remains TBD.", "Image_Description_Prompt": "Relatable connected household using several devices with an eero device visible. Focus on strong in-home Wi-Fi rather than direct competitor imagery.", "Image_Asset": "", "Supporting_Copy": "Get award-winning eero Wi-Fi with Sparklight.", "Message_1": "Your Internet Is Only As Good As Your Wi-Fi", "Message_1_Required": "1", "Message_2": "", "Message_2_Required": "0", "Message_3": "", "Message_3_Required": "0", "Message_4": "", "Message_4_Required": "0", "Message_5": "", "Message_5_Required": "0", "Message_6": "", "Message_6_Required": "0", "Legal_Full": "", "Legal_Short": "", "Approval_Notes": ""}, {"Execution": "Competitive Differentiation", "Execution_Code": "Comp", "Variation": "FWA 5G", "Variation_Code": "FWA5G", "Pillar": "Competitive Advantage", "Category": "Competitive Differentiation", "Target": "Markets with high fixed wireless adoption and broad use across MSO", "Market_Zip": "TBD", "Offer": "TBD", "Channel": "Social", "Size": "Full Set", "Status": "Current", "Start_Date": "", "End_Date": "", "Creative_Brief": "Create a flexible FWA and 5G comparison template for busy connected households. Lead with Built for Busy Homes and the supplied 50% faster Internet copy. The creative system should be able to support the four approved blanket claim directions: 50% faster Internet, 73% faster uploads, 42% more responsive Internet and 11% more reliable Internet. Treat the Ookla support and disclaimer as required claim context. Offer remains TBD.", "Image_Description_Prompt": "Busy household with multiple people using phones, tablets, laptops or streaming devices at the same time. Energetic but natural home environment that communicates heavy connectivity.", "Image_Asset": "", "Supporting_Copy": "Sparklight delivers 50% faster Internet speeds than 5G Home Internet.*", "Message_1": "Built for Busy Homes", "Message_1_Required": "1", "Message_2": "Sparklight has 50% faster internet speeds than FWA and 5G Home Internet", "Message_2_Required": "0", "Message_3": "Sparklight has 73% faster upload speeds than FWA and 5G Home Internet", "Message_3_Required": "0", "Message_4": "Sparklight has 42% more responsive internet speeds than FWA and 5G Home Internet", "Message_4_Required": "0", "Message_5": "Sparklight has 11% more reliable internet speeds than FWA and 5G Home Internet.", "Message_5_Required": "0", "Message_6": "", "Message_6_Required": "0", "Legal_Full": "Based on Sparklight's analysis of Ookla Speedtest Intelligence data during H1 2026 in Sparklight's footprint. Ookla trademarks used under license and reprinted with permission.", "Legal_Short": "TBD - Approved short legal version required.", "Approval_Notes": "Ookla support required. Follow up is pending on the wording Sparklight's analysis."}, {"Execution": "Competitive Differentiation", "Execution_Code": "Comp", "Variation": "MetroNet", "Variation_Code": "Met_Vin", "Pillar": "Competitive Advantage", "Category": "Competitive Differentiation", "Target": "MetroNet comparison", "Market_Zip": "Vincennes_IN", "Offer": "TBD", "Channel": "Social", "Size": "Full Set", "Status": "Current", "Start_Date": "", "End_Date": "", "Creative_Brief": "Build a Vincennes specific competitive speed concept. Show a household with multiple people or devices to reinforce Enough Internet For Everyone, while making the fastest download speeds in Vincennes claim prominent. Use the supplied headline and copy and reserve space for the Ookla disclaimer. Offer remains TBD.", "Image_Description_Prompt": "Household with multiple people and connected devices in use at once. Comfortable everyday home setting that suggests enough bandwidth for everyone.", "Image_Asset": "", "Supporting_Copy": "Powered By The Fastest Download Speeds In Vincennes*.", "Message_1": "Enough Internet For Everyone", "Message_1_Required": "1", "Message_2": "Fastest download speeds in Vincennes based on Ookla Speedtest Intelligence data for 1H 2026.", "Message_2_Required": "0", "Message_3": "", "Message_3_Required": "0", "Message_4": "", "Message_4_Required": "0", "Message_5": "", "Message_5_Required": "0", "Message_6": "", "Message_6_Required": "0", "Legal_Full": "Based on Ookla Speedtest Intelligence data for 1H 2026. Ookla trademarks used under license and reprinted with permission.", "Legal_Short": "TBD - Approved short legal version required.", "Approval_Notes": "Ookla claim."}, {"Execution": "Competitive Differentiation", "Execution_Code": "Comp", "Variation": "CenturyLink", "Variation_Code": "Ctl_Boi", "Pillar": "Competitive Advantage", "Category": "Competitive Differentiation", "Target": "CenturyLink comparison", "Market_Zip": "Boise_ID", "Offer": "TBD", "Channel": "Social", "Size": "Full Set", "Status": "Current", "Start_Date": "", "End_Date": "", "Creative_Brief": "Create a Boise competitive comparison against CenturyLink. Make the faster download speed claim the main message and support it visually with Gig Internet and premium eero Wi-Fi. Keep the comparison clean rather than overly aggressive. Use the supplied headline and copy and reserve space for the Ookla disclaimer. Offer remains TBD.", "Image_Description_Prompt": "Modern household using multiple connected devices with a premium Wi-Fi device visible. Clean, confident lifestyle imagery suitable for a speed comparison message.", "Image_Asset": "", "Supporting_Copy": "Upgrade to Gig speed Internet with premium eero Wi-Fi.", "Message_1": "Sparklight Download Speeds Are Faster Than CenturyLink*", "Message_1_Required": "1", "Message_2": "Sparklight download speeds are faster than CenturyLink based on Ookla Speedtest Intelligence data for 1H 2026.", "Message_2_Required": "0", "Message_3": "", "Message_3_Required": "0", "Message_4": "", "Message_4_Required": "0", "Message_5": "", "Message_5_Required": "0", "Message_6": "", "Message_6_Required": "0", "Legal_Full": "Based on Ookla Speedtest Intelligence data for 1H 2026. Ookla trademarks used under license and reprinted with permission.", "Legal_Short": "TBD - Approved short legal version required.", "Approval_Notes": "Ookla claim."}, {"Execution": "Competitive Differentiation", "Execution_Code": "Comp", "Variation": "Plateau", "Variation_Code": "Plat_Ros", "Pillar": "Competitive Advantage", "Category": "Competitive Differentiation", "Target": "Plateau comparison", "Market_Zip": "Roswell_NM", "Offer": "TBD", "Channel": "Social", "Size": "Full Set", "Status": "Current", "Start_Date": "", "End_Date": "", "Creative_Brief": "Create a Roswell competitive comparison against Plateau. Make the faster download speed claim the primary message and support it with Gig Internet and premium eero Wi-Fi imagery. Use the supplied headline and copy and reserve space for the Ookla disclaimer. Route the finished creative to Ookla for review and approval. Offer remains TBD.", "Image_Description_Prompt": "Modern connected household with multiple devices and a premium Wi-Fi device visible. Confident, clean lifestyle imagery suitable for a faster-download message.", "Image_Asset": "", "Supporting_Copy": "Upgrade to Gig speed Internet with premium eero Wi-Fi.", "Message_1": "Sparklight Download Speeds Are Faster Than Plateau*", "Message_1_Required": "1", "Message_2": "Sparklight download speeds are faster than Plateau based on Ookla Speedtest Intelligence data for 1H 2026.", "Message_2_Required": "0", "Message_3": "", "Message_3_Required": "0", "Message_4": "", "Message_4_Required": "0", "Message_5": "", "Message_5_Required": "0", "Message_6": "", "Message_6_Required": "0", "Legal_Full": "Based on Ookla Speedtest Intelligence data for 1H 2026. Ookla trademarks used under license and reprinted with permission.", "Legal_Short": "TBD - Approved short legal version required.", "Approval_Notes": "Ookla claim. Ookla must review and approve creative."}, {"Execution": "Competitive Differentiation", "Execution_Code": "Comp", "Variation": "DSL", "Variation_Code": "DSL", "Pillar": "Competitive Advantage", "Category": "Competitive Differentiation", "Target": "DSL only ZIP codes", "Market_Zip": "TBD", "Offer": "TBD", "Channel": "Social", "Size": "Full Set", "Status": "Current", "Start_Date": "", "End_Date": "", "Creative_Brief": "Use an upgrade story that makes older DSL feel insufficient for a modern connected household without adding unsupported comparative claims. Show multiple devices or everyday high bandwidth activity and position Gig Internet plus premium eero Wi-Fi as the next step. Use the supplied headline and copy. Offer remains TBD.", "Image_Description_Prompt": "Modern household using several high-bandwidth devices such as laptop, tablet, streaming TV or gaming setup. Contemporary scene that makes older connectivity feel outgrown without showing a competitor.", "Image_Asset": "", "Supporting_Copy": "Upgrade to Gig speed Internet with premium eero Wi-Fi.", "Message_1": "Your Home Has Outgrown DSL", "Message_1_Required": "1", "Message_2": "", "Message_2_Required": "0", "Message_3": "", "Message_3_Required": "0", "Message_4": "", "Message_4_Required": "0", "Message_5": "", "Message_5_Required": "0", "Message_6": "", "Message_6_Required": "0", "Legal_Full": "", "Legal_Short": "", "Approval_Notes": ""}, {"Execution": "Competitive Differentiation", "Execution_Code": "Comp", "Variation": "Starlink", "Variation_Code": "Star", "Pillar": "Competitive Advantage", "Category": "Competitive Differentiation", "Target": "Starlink competitive markets", "Market_Zip": "TBD", "Offer": "TBD", "Channel": "Social", "Size": "Full Set", "Status": "Current", "Start_Date": "", "End_Date": "", "Creative_Brief": "Create a playful but clean terrestrial Internet alternative to Starlink. A subtle sky or satellite cue can set up the contrast, while the hero should be a dependable connected home experience. Keep reliability language to the supplied copy and avoid adding unsupported performance claims. Offer remains TBD.", "Image_Description_Prompt": "Dependable connected home at dusk or evening with a subtle sky cue outside. Keep the home and reliable terrestrial connection as the hero; avoid literal competitor branding.", "Image_Asset": "", "Supporting_Copy": "Sparklight is built for a reliable connection.", "Message_1": "Your Best Internet Doesn't Come From Space", "Message_1_Required": "1", "Message_2": "", "Message_2_Required": "0", "Message_3": "", "Message_3_Required": "0", "Message_4": "", "Message_4_Required": "0", "Message_5": "", "Message_5_Required": "0", "Message_6": "", "Message_6_Required": "0", "Legal_Full": "", "Legal_Short": "", "Approval_Notes": ""}, {"Execution": "Competitor Outage Response", "Execution_Code": "Outage", "Variation": "Competitor Outage", "Variation_Code": "Resp", "Pillar": "Market Events", "Category": "Competitor Outage Response", "Target": "ZIP codes experiencing competitor outages", "Market_Zip": "DYNAMIC", "Offer": "TBD", "Channel": "Social", "Size": "Full Set", "Status": "Current", "Start_Date": "", "End_Date": "", "Creative_Brief": "Build a responsive switch message for ZIP codes experiencing competitor outages. Show the relief of a household getting back online and emphasize Gig Internet, premium eero Wi-Fi and local support. Keep the tone helpful rather than exploitative. Use the supplied headline and copy. Offer remains TBD.", "Image_Description_Prompt": "Household happily reconnected and using devices after an interruption. Helpful, relieved, positive tone rather than frustration or competitor-bashing.", "Image_Asset": "", "Supporting_Copy": "Switch today and get Gig speed Internet, premium eero Wi-Fi and local support.", "Message_1": "Looking for a More Reliable Connection?", "Message_1_Required": "1", "Message_2": "", "Message_2_Required": "0", "Message_3": "", "Message_3_Required": "0", "Message_4": "", "Message_4_Required": "0", "Message_5": "", "Message_5_Required": "0", "Message_6": "", "Message_6_Required": "0", "Legal_Full": "", "Legal_Short": "", "Approval_Notes": ""}, {"Execution": "Mobile Differentiator", "Execution_Code": "Mob", "Variation": "Mobile Upgrade Internet", "Variation_Code": "UPG", "Pillar": "Value and Included Benefits", "Category": "Mobile Differentiator", "Target": "Broad market deployment", "Market_Zip": "BROAD", "Offer": "TBD", "Channel": "Social", "Size": "Full Set", "Status": "Current", "Start_Date": "", "End_Date": "", "Creative_Brief": "Create a simple bundle story that visually connects home Internet and mobile. Show a phone plus a connected home or person using both services. Make one year of FREE mobile service easy to understand while keeping Gig speed Internet as the anchor. Use the supplied headline and copy. Offer remains TBD.", "Image_Description_Prompt": "Person or family using a smartphone in a connected home environment. Visually connect mobile service with home Internet in one simple lifestyle scene.", "Image_Asset": "", "Supporting_Copy": "Get Gig-speed Internet plus one year of FREE mobile service.", "Message_1": "Upgrade Your Internet. Get Mobile Included.", "Message_1_Required": "1", "Message_2": "", "Message_2_Required": "0", "Message_3": "", "Message_3_Required": "0", "Message_4": "", "Message_4_Required": "0", "Message_5": "", "Message_5_Required": "0", "Message_6": "", "Message_6_Required": "0", "Legal_Full": "", "Legal_Short": "", "Approval_Notes": ""}, {"Execution": "Mobile Differentiator", "Execution_Code": "Mob", "Variation": "Mobile Three Benefits", "Variation_Code": "3Ben", "Pillar": "Value and Included Benefits", "Category": "Mobile Differentiator", "Target": "Broad market deployment", "Market_Zip": "BROAD", "Offer": "TBD", "Channel": "Social", "Size": "Full Set", "Status": "Current", "Start_Date": "", "End_Date": "", "Creative_Brief": "Build a three benefit visual system with equal clear cues for Gig speed Internet, premium eero Wi-Fi and one year FREE Mobile. A simple three part composition or icon supported layout could work well. Use the supplied headline and copy. Offer remains TBD.", "Image_Description_Prompt": "Connected household scene that can visually support three benefits: fast Internet, premium Wi-Fi and mobile. Keep the composition simple enough for modular callouts.", "Image_Asset": "", "Supporting_Copy": "Gig-speed Internet + Premium eero Wi-Fi + One Year FREE Mobile.", "Message_1": "One Gig. Three Big Benefits.", "Message_1_Required": "1", "Message_2": "", "Message_2_Required": "0", "Message_3": "", "Message_3_Required": "0", "Message_4": "", "Message_4_Required": "0", "Message_5": "", "Message_5_Required": "0", "Message_6": "", "Message_6_Required": "0", "Legal_Full": "", "Legal_Short": "", "Approval_Notes": ""}, {"Execution": "2 Gig Targeting", "Execution_Code": "2Gig", "Variation": "2 Gig", "Variation_Code": "2Gig", "Pillar": "Technology Leadership", "Category": "2 Gig Targeting", "Target": "Areas with multi Gig availability", "Market_Zip": "TBD", "Offer": "TBD", "Channel": "Social", "Size": "Full Set", "Status": "Current", "Start_Date": "", "End_Date": "", "Creative_Brief": "Create a premium high performance upgrade concept for areas with multi Gig availability. Make 2 Gig the hero and visually support it with premium eero Wi-Fi and one year FREE Mobile as added benefits. Keep the composition energetic but simple. Use the supplied headline and copy. Offer remains TBD.", "Image_Description_Prompt": "Premium high-performance home Internet scene with gaming, streaming or multiple connected devices. Contemporary, energetic and polished without feeling overly technical.", "Image_Asset": "", "Supporting_Copy": "2 Gig Internet + Premium eero Wi-Fi + 1 Year FREE Mobile", "Message_1": "The Ultimate Internet Upgrade", "Message_1_Required": "1", "Message_2": "", "Message_2_Required": "0", "Message_3": "", "Message_3_Required": "0", "Message_4": "", "Message_4_Required": "0", "Message_5": "", "Message_5_Required": "0", "Message_6": "", "Message_6_Required": "0", "Legal_Full": "", "Legal_Short": "", "Approval_Notes": ""}, {"Execution": "Superior Network Performance", "Execution_Code": "NetPerf", "Variation": "Opensignal Network Leadership", "Variation_Code": "Open", "Pillar": "Network Performance", "Category": "Superior Network Performance", "Target": "Markets and ZIP codes where Opensignal confirms network leadership", "Market_Zip": "TBD", "Offer": "TBD", "Channel": "Social", "Size": "Full Set", "Status": "Current", "Start_Date": "", "End_Date": "", "Creative_Brief": "Create a dependable network performance story for markets where Opensignal confirms leadership. Use an everyday connected home scene that communicates confidence and consistency rather than a specific speed comparison. Use the supplied headline and copy. Do not invent an Opensignal claim or disclaimer. Offer remains TBD.", "Image_Description_Prompt": "Everyday connected household using Internet comfortably and confidently. Calm, dependable lifestyle photography that suggests consistent network performance without a specific competitive claim.", "Image_Asset": "", "Supporting_Copy": "Sparklight delivers fast, dependable Internet on a fiber-fueled network.", "Message_1": "Performance You Can Count On", "Message_1_Required": "1", "Message_2": "Only deploy in markets and ZIP codes where Opensignal data confirms network leadership.", "Message_2_Required": "0", "Message_3": "", "Message_3_Required": "0", "Message_4": "", "Message_4_Required": "0", "Message_5": "", "Message_5_Required": "0", "Message_6": "", "Message_6_Required": "0", "Legal_Full": "TBD - Opensignal legal language required.", "Legal_Short": "TBD - Opensignal short legal required.", "Approval_Notes": "Opensignal support is required before using this execution in a market. The source guide does not provide a specific Opensignal claim or disclaimer."}], COLS=["Execution", "Execution_Code", "Variation", "Variation_Code", "Pillar", "Category", "Target", "Market_Zip", "Offer", "Channel", "Size", "Status", "Start_Date", "End_Date", "Creative_Brief", "Image_Description_Prompt", "Image_Asset", "Supporting_Copy", "Message_1", "Message_1_Required", "Message_2", "Message_2_Required", "Message_3", "Message_3_Required", "Message_4", "Message_4_Required", "Message_5", "Message_5_Required", "Message_6", "Message_6_Required", "Legal_Full", "Legal_Short", "Approval_Notes"], PILLARS=["Technology Leadership", "Value & Included Benefits", "Competitive Advantage", "Market Events", "Network Performance"], STATUSES=["Current", "Future", "Retired"], EXEC_MAP={"Fiber Technology": "FibTech", "Equipment Included": "Eq", "Competitive Differentiation": "Comp", "Competitor Outage Response": "Outage", "Mobile Differentiator": "Mob", "2 Gig Targeting": "2Gig", "Superior Network Performance": "NetPerf"}, VAR_MAP={"Fiber": "Fib", "Equipment Included": "Eq", "eero vs Fiber Competitors": "Eero", "FWA 5G": "FWA5G", "MetroNet": "Met_Vin", "CenturyLink": "Ctl_Boi", "Plateau": "Plat_Ros", "DSL": "DSL", "Starlink": "Star", "Competitor Outage": "Resp", "Mobile Upgrade": "Upg", "Mobile Three Benefits": "3Ben", "2 Gig": "2Gig", "Opensignal Network Leadership": "Open"};
+let data=JSON.parse(JSON.stringify(SEED)), idx=-1, tempImageURL='';
+const MF=[1,2,3,4,5,6].map(i=>'Message_'+i), RF=[1,2,3,4,5,6].map(i=>'Message_'+i+'_Required');
+const SIZESETS={
+  'Display':['Full Set','160x600','300x50','300x250','300x600','320x50','728x90','970x90','970x250'],
+  'Social':['Full Set','1920x1080','1350x1080','1080x1080'],
+  'Landing Page':['Custom'],
+  'Email':['Custom']
+};
+const E=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+const el=f=>document.querySelector(`[data-f="${f}"]`);
+const uniq=c=>[...new Set(data.map(r=>(r[c]||'').trim()).filter(Boolean))].sort();
+
+function filenameSafe(s){
+  return String(s||'').trim().replace(/-/g,' ').replace(/[^A-Za-z0-9 ]+/g,' ').replace(/\s+/g,'_').replace(/^_+|_+$/g,'');
+}
+function camelCode(s){
+  const words=String(s||'').trim().split(/[^A-Za-z0-9]+/).filter(Boolean);
+  if(!words.length) return 'TBD';
+  return words.map((w,i)=>{
+    if(/^\d/.test(w)) return w;
+    if(w.length<=3 && w===w.toUpperCase()) return w;
+    return w.charAt(0).toUpperCase()+w.slice(1).toLowerCase();
+  }).join('').slice(0,24);
+}
+function generateCode(human,map){return map[human]||camelCode(human)}
+function sameCode(a,b){return filenameSafe(a).toLowerCase()===filenameSafe(b).toLowerCase()}
+function autoCodes(){
+  const ec=generateCode(el('Execution').value,EXEC_MAP), vc=generateCode(el('Variation').value,VAR_MAP);
+  document.getElementById('execCodePreview').textContent=ec;
+  document.getElementById('varCodePreview').textContent=vc;
+  updateFilenamePreview();
+}
+function proposedFilenames(r){
+  const channel=filenameSafe(r.Channel);
+  const ec=r.Execution_Code||generateCode(r.Execution,EXEC_MAP);
+  const vc=r.Variation_Code||generateCode(r.Variation,VAR_MAP);
+  const sizes=r.Size==='Full Set' ? (SIZESETS[r.Channel]||[]).filter(x=>x!=='Full Set') : [r.Size];
+  return sizes.map(s=>{
+    const base=`DCO-${channel}_${filenameSafe(s)}-${filenameSafe(ec)}`;
+    return sameCode(ec,vc) ? base : `${base}-${filenameSafe(vc)}`;
+  });
+}
+function detailsCell(r){
+  const files=proposedFilenames(r), parts=[];
+  if(files.length) parts.push('<strong>Proposed filenames</strong>'+files.map(f=>`<span class="filename">${E(f)}</span>`).join(''));
+  if(r.Market_Zip) parts.push('<strong>Market/ZIP:</strong> '+E(r.Market_Zip));
+  if(r.Offer) parts.push('<strong>Offer:</strong> '+E(r.Offer));
+  if(r.Status==='Future' && r.Start_Date) parts.push('<strong>Starts:</strong> '+E(r.Start_Date));
+  if(r.Status==='Retired' && r.End_Date) parts.push('<strong>Ended:</strong> '+E(r.End_Date));
+  return `<div class="details">${parts.join('<br>')}</div>`;
+}
+function imageCell(r){if(!r.Image_Asset)return '<span class="sub">None</span>';return `<img class="thumb" src="${E(r.Image_Asset)}" onerror="this.outerHTML='<span class=&quot;sub&quot;>Image path set</span>'">`;}
+function filters(){
+  [['fc','Channel','channels'],['fp','Pillar','pillars'],['fs','Status','statuses']].forEach(([id,c,l])=>{
+    let x=document.getElementById(id),v=x.value;
+    x.innerHTML=`<option value="">All ${l}</option>`+uniq(c).map(z=>`<option>${E(z)}</option>`).join('');
+    if([...x.options].some(o=>o.value===v))x.value=v;
+  });
+}
+function render(){
+  let q=document.getElementById('search').value.toLowerCase(),c=document.getElementById('fc').value,p=document.getElementById('fp').value,s=document.getElementById('fs').value;
+  let a=data.map((r,i)=>({r,i})).filter(x=>(!c||x.r.Channel===c)&&(!p||x.r.Pillar===p)&&(!s||x.r.Status===s)&&(!q||Object.values(x.r).join(' ').toLowerCase().includes(q)));
+  document.getElementById('tbody').innerHTML=a.map(x=>`<tr>
+<td class="rowbtns"><button onclick="edit(${x.i})">Edit</button><button onclick="dup(${x.i})">Duplicate</button><button class="danger" onclick="del(${x.i})">Delete</button></td>
+<td>${E(x.r.Execution)}<br><span class="code">${E(x.r.Execution_Code)}</span></td>
+<td>${E(x.r.Variation)}<br><span class="code">${E(x.r.Variation_Code)}</span></td>
+<td>${E(x.r.Channel)}</td><td>${E(x.r.Size)}</td><td>${E(x.r.Pillar)}</td><td>${E(x.r.Status)}</td>
+<td>${E(x.r.Creative_Brief)}</td><td>${E(x.r.Image_Description_Prompt)}</td><td>${imageCell(x.r)}</td><td>${E(x.r.Supporting_Copy)}</td><td>${detailsCell(x.r)}</td>
+</tr>`).join('');
+}
+function buildControlled(){
+  const p=el('Pillar'); p.innerHTML=PILLARS.map(v=>`<option>${E(v)}</option>`).join('');
+  const s=el('Status'); s.innerHTML=STATUSES.map(v=>`<option>${E(v)}</option>`).join('');
+}
+function buildMsgs(r){
+  document.getElementById('msgs').innerHTML=MF.map((f,i)=>`<div class="msg"><div class="num">${i+1}</div><input class="mtext" value="${E(r[f]||'')}" placeholder="Priority message ${i+1}"><label class="req"><input class="mreq" type="checkbox" ${String(r[RF[i]])==='1'?'checked':''}> Required</label><div><button onclick="move(${i},-1)">↑</button><button onclick="move(${i},1)">↓</button></div></div>`).join('');
+}
+function refreshSizes(preferred){
+  const ch=el('Channel').value||'Display',s=el('Size'),opts=SIZESETS[ch]||['Custom'],want=preferred||s.value;
+  s.innerHTML=opts.map(v=>`<option>${E(v)}</option>`).join('');
+  s.value=opts.includes(want)?want:opts[0];
+  document.getElementById('sizeNote').innerHTML=s.value==='Full Set'?`<strong>Full Set</strong><br>${opts.filter(v=>v!=='Full Set').map(E).join('<br>')}`:(s.value==='Custom'?'Custom size for this channel.':'');
+  updateFilenamePreview();
+}
+function statusChanged(){
+  const status=el('Status').value;
+  document.getElementById('startWrap').classList.toggle('hidden',status!=='Future');
+  document.getElementById('endWrap').classList.toggle('hidden',status!=='Retired');
+}
+function setImagePreview(path){
+  const box=document.getElementById('assetPreview');
+  if(tempImageURL){box.innerHTML=`<img src="${tempImageURL}">`;return}
+  if(path)box.innerHTML=`<img src="${E(path)}" onerror="this.parentElement.textContent='Image path set: ${E(path)}'">`;
+  else box.textContent='No image selected';
+}
+function setForm(r){
+  buildControlled();
+  COLS.forEach(c=>{if(el(c)&&c!=='Size'&&c!=='Execution_Code'&&c!=='Variation_Code')el(c).value=r[c]??''});
+  buildMsgs(r);refreshSizes(r.Size||'Full Set');setImagePreview(r.Image_Asset||'');
+  document.getElementById('execCodePreview').textContent=r.Execution_Code||generateCode(r.Execution,EXEC_MAP);
+  document.getElementById('varCodePreview').textContent=r.Variation_Code||generateCode(r.Variation,VAR_MAP);
+  statusChanged();updateFilenamePreview();
+}
+function updateFilenamePreview(){
+  const r={
+    Execution:el('Execution')?.value||'',Variation:el('Variation')?.value||'',
+    Execution_Code:document.getElementById('execCodePreview')?.textContent||'',
+    Variation_Code:document.getElementById('varCodePreview')?.textContent||'',
+    Channel:el('Channel')?.value||'Display',Size:el('Size')?.value||'Full Set'
+  };
+  const f=proposedFilenames(r);
+  document.getElementById('filenamePreview').innerHTML=f.length?f.map(x=>`<span class="filename">${E(x)}</span>`).join(''):'No filename yet.';
+}
+function edit(i){idx=i;document.getElementById('title').textContent='Edit Creative Execution';tempImageURL='';setForm(data[i]);document.getElementById('modal').classList.add('open')}
+function addRow(){
+  idx=-1;let r=Object.fromEntries(COLS.map(c=>[c,'']));
+  r.Channel='Display';r.Size='Full Set';r.Status='Current';r.Pillar=PILLARS[0];
+  tempImageURL='';setForm(r);document.getElementById('modal').classList.add('open');
+}
+function closeM(){if(tempImageURL)URL.revokeObjectURL(tempImageURL);tempImageURL='';document.getElementById('modal').classList.remove('open')}
+function move(i,d){let j=i+d;if(j<0||j>5)return;let t=[...document.querySelectorAll('.mtext')],r=[...document.querySelectorAll('.mreq')];[t[i].value,t[j].value]=[t[j].value,t[i].value];let b=r[i].checked;r[i].checked=r[j].checked;r[j].checked=b;}
+function clearImage(){el('Image_Asset').value='';if(tempImageURL)URL.revokeObjectURL(tempImageURL);tempImageURL='';setImagePreview('')}
+document.getElementById('imageFile').addEventListener('change',e=>{
+  const f=e.target.files[0];if(!f)return;if(tempImageURL)URL.revokeObjectURL(tempImageURL);
+  tempImageURL=URL.createObjectURL(f);el('Image_Asset').value='assets/'+f.name;setImagePreview(el('Image_Asset').value);e.target.value='';
+});
+function save(){
+  let r={};COLS.forEach(c=>r[c]=el(c)?el(c).value:'');
+  r.Execution_Code=document.getElementById('execCodePreview').textContent;
+  r.Variation_Code=document.getElementById('varCodePreview').textContent;
+  let mt=[...document.querySelectorAll('.mtext')],mr=[...document.querySelectorAll('.mreq')];
+  MF.forEach((f,i)=>{r[f]=mt[i].value;r[RF[i]]=mr[i].checked?'1':'0'});
+  if(!r.Execution.trim()||!r.Variation.trim())return alert('Execution and Variation are required.');
+  if(r.Status==='Future'&&!r.Start_Date)return alert('Start Date is required for Future creative.');
+  if(r.Status==='Retired'&&!r.End_Date)return alert('End Date is required for Retired creative.');
+  if(r.Status==='Current'){r.Start_Date=r.Start_Date||'';r.End_Date='';}
+  if(idx<0)data.push(r);else data[idx]=r;
+  document.getElementById('dirty').textContent='Edited — download DCO_Builder.csv to keep changes';
+  closeM();filters();render();
+}
+function dup(i){let r=JSON.parse(JSON.stringify(data[i]));r.Variation=r.Variation+' Copy';r.Variation_Code=generateCode(r.Variation,VAR_MAP);data.splice(i+1,0,r);filters();render()}
+function del(i){if(confirm('Delete this creative execution?')){data.splice(i,1);filters();render()}}
+function ce(v){v=String(v??'');return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v}
+function downloadCSV(){
+  let t=[COLS.join(','),...data.map(r=>COLS.map(c=>ce(r[c]||'')).join(','))].join('\n');
+  let b=new Blob(['\ufeff'+t],{type:'text/csv'}),a=document.createElement('a');
+  a.href=URL.createObjectURL(b);a.download='DCO_Builder.csv';a.click();URL.revokeObjectURL(a.href);
+  document.getElementById('dirty').textContent='Downloaded';
+}
+function parse(t){
+  let R=[],r=[],f='',q=false;
+  for(let i=0;i<t.length;i++){let c=t[i];if(q){if(c==='"'&&t[i+1]==='"'){f+='"';i++}else if(c==='"')q=false;else f+=c}else{if(c==='"')q=true;else if(c===','){r.push(f);f=''}else if(c==='\n'){r.push(f.replace(/\r$/,''));R.push(r);r=[];f=''}else f+=c}}
+  if(f.length||r.length){r.push(f);R.push(r)}let h=(R.shift()||[]).map(x=>x.replace(/^\ufeff/,''));
+  return R.filter(x=>x.some(v=>v)).map(x=>Object.fromEntries(h.map((c,i)=>[c,x[i]??''])));
+}
+document.getElementById('csvFile').addEventListener('change',async e=>{
+  let f=e.target.files[0];if(!f)return;
+  let p=parse(await f.text()),missing=COLS.filter(c=>!(c in (p[0]||{})));
+  if(missing.length)return alert('Wrong CSV structure. Missing: '+missing.join(', '));
+  data=p.map(r=>Object.fromEntries(COLS.map(c=>[c,r[c]??''])));
+  filters();render();document.getElementById('dirty').textContent='Loaded uploaded CSV';e.target.value='';
+});
+
+// Optional header mascot. Stored locally in this browser; no image = no gap.
+const MASCOT_KEY='dco_builder_mascot';
+function applyMascot(dataUrl){
+  const slot=document.getElementById('mascotSlot'),img=document.getElementById('mascotImg');
+  if(dataUrl){img.src=dataUrl;slot.classList.add('active')}else{img.removeAttribute('src');slot.classList.remove('active')}
+}
+document.getElementById('mascotFile').addEventListener('change',e=>{
+  const f=e.target.files[0];if(!f)return;
+  const reader=new FileReader();
+  reader.onload=()=>{localStorage.setItem(MASCOT_KEY,reader.result);applyMascot(reader.result)};
+  reader.readAsDataURL(f);e.target.value='';
+});
+function clearMascot(){localStorage.removeItem(MASCOT_KEY);applyMascot('')}
+applyMascot(localStorage.getItem(MASCOT_KEY)||'');
+
+filters();render();
+</script>
+</body></html>
