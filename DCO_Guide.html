@@ -47,13 +47,24 @@ footer{margin-top:30px;padding-top:14px;border-top:1px solid var(--line);font-si
 @media(max-width:850px){
  .header-inner{align-items:flex-start;flex-direction:column}.hero,.stack-wrap,.g2,.g3,.g4,.goodbad{grid-template-columns:1fr}.merge{grid-template-columns:1fr}.merge-arrow{min-height:30px}.layer{grid-template-columns:1fr}.ad-demo{grid-template-columns:1fr}.glossary{grid-template-columns:1fr}.hero h2{font-size:29px}nav{justify-content:flex-start}
 }
+
+.back-builder{
+  display:inline-flex;align-items:center;gap:7px;
+  background:var(--p);color:#fff!important;text-decoration:none!important;
+  padding:9px 12px;border-radius:8px;font-size:11px;font-weight:900;
+  box-shadow:0 2px 0 rgba(0,0,0,.08)
+}
+.back-builder:hover{filter:brightness(.96)}
+
 </style>
 </head>
 <body>
 <header>
  <div class="header-inner">
   <div class="brand"><div class="brandmark">DCO</div><div><h1>DCO Ecosystem & Creative Handoff Guide</h1><div class="sub">Companion reference for the DCO Builder</div></div></div>
-  <nav>
+  <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end">
+   <a class="back-builder" href="index.html">← Back to DCO Builder</a>
+   <nav>
    <a href="#who">Who is who</a><a href="#merger">Merger</a><a href="#stack">File stack</a><a href="#handoff">Handoff</a><a href="#builder">Builder mapping</a><a href="#glossary">Glossary</a>
   </nav>
  </div>
