@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DCO Ecosystem & Creative Handoff Guide</title>
+<style>
+:root{
+  --p:#71188e;--p2:#8d3b91;--ink:#24202a;--muted:#706a76;--line:#ddd7e3;
+  --bg:#f6f4f8;--soft:#f2eaf5;--blue:#2f6295;--navy:#294e65;--pink:#b73c7a;
+  --amber:#a66c13;--white:#fff
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);font-family:Inter,Segoe UI,Arial,sans-serif;color:var(--ink);line-height:1.45}
+header{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.96);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.header-inner{max-width:1180px;margin:auto;padding:12px 22px;display:flex;justify-content:space-between;align-items:center;gap:18px}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}.brandmark{width:42px;height:42px;border-radius:11px;background:var(--p);color:white;display:grid;place-items:center;font-weight:900}
+.brand h1{font-size:19px;color:var(--p);margin:0}.brand .sub{font-size:11px;color:var(--muted)}
+nav{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}nav a{text-decoration:none;color:#574b5b;font-size:11px;font-weight:800;padding:7px 9px;border-radius:7px}nav a:hover{background:var(--soft);color:var(--p)}
+main{max-width:1180px;margin:auto;padding:28px 22px 50px}
+.hero{background:#fff;border:1px solid var(--line);border-radius:16px;padding:28px;display:grid;grid-template-columns:1.25fr .75fr;gap:26px;align-items:center}
+.eyebrow{font-size:10px;font-weight:900;letter-spacing:1.6px;text-transform:uppercase;color:var(--p)}
+.hero h2{font-size:36px;line-height:1.05;margin:7px 0 10px;letter-spacing:-1.3px}.hero p{font-size:14px;color:var(--muted);max-width:760px;margin:0}
+.hero-map{background:var(--soft);border-radius:13px;padding:15px}.hero-map .row{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap}.chip{background:white;border:1px solid var(--line);border-radius:999px;padding:8px 10px;font-size:10px;font-weight:900}.arrow{color:var(--p);font-weight:900}
+.section{margin-top:30px}.section-title{font-size:13px;font-weight:900;letter-spacing:1px;text-transform:uppercase;color:var(--p);margin:0 0 10px}.section-lede{font-size:13px;color:var(--muted);max-width:920px;margin:0 0 14px}
+.grid{display:grid;gap:13px}.g2{grid-template-columns:repeat(2,minmax(0,1fr))}.g3{grid-template-columns:repeat(3,minmax(0,1fr))}.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.card{background:white;border:1px solid var(--line);border-radius:12px;padding:16px;min-width:0}.card h3{font-size:17px;margin:2px 0 4px}.card p{font-size:12px;margin:4px 0;color:#514a55}.card ul{font-size:11.5px;margin:9px 0 0;padding-left:18px}.card li{margin:4px 0}
+.card.brand{border-top:5px solid var(--p)}.card.agency{border-top:5px solid var(--navy)}.card.ft{border-top:5px solid var(--pink)}.card.iv{border-top:5px solid var(--blue)}.card.now{border-top:5px solid var(--p2);background:#fbf7fc}
+.kicker{font-size:9px;text-transform:uppercase;font-weight:900;letter-spacing:1px;color:var(--muted)}
+.logo-word{font-size:22px;font-weight:950;letter-spacing:-.8px}.harmelin{color:var(--navy)}.mediaocean{color:#6d2d71}.flashtalking{color:var(--pink)}.innovid{color:var(--blue)}
+.callout{background:var(--soft);border-left:5px solid var(--p);border-radius:8px;padding:11px 13px;font-size:12px;margin-top:12px}
+.merge{display:grid;grid-template-columns:1fr 56px 1fr 56px 1.25fr;gap:10px;align-items:stretch}.merge-arrow{display:grid;place-items:center;text-align:center;font-size:10px;font-weight:900;color:var(--p)}
+.formula{background:white;border:1px solid var(--line);border-left:5px solid var(--p);border-radius:9px;padding:13px 15px;font-size:13px;font-weight:800}
+.stack-wrap{display:grid;grid-template-columns:1.05fr .95fr;gap:15px}.stack,.package{background:white;border:1px solid var(--line);border-radius:13px;padding:17px}.layer{border:1px solid var(--line);border-left:5px solid #777;background:#faf9fb;border-radius:8px;padding:10px 11px;margin-top:8px;display:grid;grid-template-columns:120px 1fr 145px;gap:10px;align-items:center}.layer.dynamic{border-left-color:var(--p)}.layer.data{border-left-color:var(--blue)}.layer.legal{border-left-color:var(--amber)}
+.layer b{font-size:11px}.layer span{font-size:10.5px}.layer code,.code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:9.5px;background:#f1edf3;border-radius:5px;padding:4px 6px;overflow-wrap:anywhere}
+.down{text-align:center;color:var(--p);font-weight:900;font-size:19px;margin:7px 0}
+.ad-demo{border:2px solid var(--p);border-radius:10px;padding:10px;display:grid;grid-template-columns:1.1fr .9fr;gap:10px}.photo{min-height:150px;border-radius:7px;background:linear-gradient(135deg,#d7d4d8 0 45%,#aaa5ad 45% 100%);display:flex;align-items:flex-end;padding:9px;font-size:9px;font-weight:800;color:#47424a}.adcopy{display:flex;flex-direction:column;justify-content:center;gap:7px}.adcopy .headline{font-size:17px;font-weight:900;line-height:1.05}.adcopy .offer{color:var(--p);font-weight:900;font-size:12px}.cta{display:inline-block;align-self:flex-start;background:var(--p);color:#fff;border-radius:5px;padding:6px 9px;font-size:9px;font-weight:900}
+.package-item{padding:9px 10px;border-radius:8px;background:#faf8fb;border:1px solid var(--line);margin-top:8px;font-size:11px}.package-item b{color:var(--p)}
+.tree{white-space:pre-wrap;background:#29252b;color:#f6f2f7;border-radius:9px;padding:13px;font:10px/1.55 ui-monospace,SFMono-Regular,Consolas,monospace;margin:11px 0 0;overflow:auto}
+.crosswalk{background:white;border:1px solid var(--line);border-radius:12px;overflow:auto}.crosswalk table{border-collapse:collapse;width:100%;min-width:860px;font-size:11px}.crosswalk th,.crosswalk td{padding:9px 10px;border-bottom:1px solid #eee;border-right:1px solid #f0edf2;text-align:left;vertical-align:top}.crosswalk th{background:#f5eff8;color:#50365a;font-size:9.5px;text-transform:uppercase}.crosswalk code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:9.5px}
+.filetype{display:inline-block;padding:3px 6px;border-radius:5px;background:var(--soft);color:var(--p);font:800 9px ui-monospace,SFMono-Regular,Consolas,monospace;margin:2px 2px 2px 0}
+.goodbad{display:grid;grid-template-columns:1fr 1fr;gap:12px}.good,.bad{background:white;border:1px solid var(--line);border-radius:12px;padding:15px}.good{border-top:5px solid #27834b}.bad{border-top:5px solid #b42318}.good h3,.bad h3{margin:0 0 7px;font-size:15px}.good li,.bad li{font-size:11.5px;margin:5px 0}
+.glossary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}.term{background:white;border:1px solid var(--line);border-radius:9px;padding:11px}.term b{font-size:11px;color:var(--p)}.term span{display:block;font-size:10.5px;margin-top:3px;color:#5b545f}
+.sourcebox{background:#fff;border:1px solid var(--line);border-radius:11px;padding:14px;font-size:10.5px;color:var(--muted)}.sourcebox a{color:var(--p)}
+footer{margin-top:30px;padding-top:14px;border-top:1px solid var(--line);font-size:10px;color:var(--muted);display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+@media(max-width:850px){
+ .header-inner{align-items:flex-start;flex-direction:column}.hero,.stack-wrap,.g2,.g3,.g4,.goodbad{grid-template-columns:1fr}.merge{grid-template-columns:1fr}.merge-arrow{min-height:30px}.layer{grid-template-columns:1fr}.ad-demo{grid-template-columns:1fr}.glossary{grid-template-columns:1fr}.hero h2{font-size:29px}nav{justify-content:flex-start}
+}
+</style>
+</head>
+<body>
+<header>
+ <div class="header-inner">
+  <div class="brand"><div class="brandmark">DCO</div><div><h1>DCO Ecosystem & Creative Handoff Guide</h1><div class="sub">Companion reference for the DCO Builder</div></div></div>
+  <nav>
+   <a href="#who">Who is who</a><a href="#merger">Merger</a><a href="#stack">File stack</a><a href="#handoff">Handoff</a><a href="#builder">Builder mapping</a><a href="#glossary">Glossary</a>
+  </nav>
+ </div>
+</header>
+<main>
+<section class="hero">
+ <div>
+  <div class="eyebrow">Digital advertising • working guide</div>
+  <h2>From campaign idea to programmatic creative</h2>
+  <p>This guide explains the roles of Harmelin, Mediaocean, Innovid and legacy Flashtalking, then translates DCO into the practical question the creative team actually needs answered: <strong>what do we build, how do the pieces stack, and what do we hand off?</strong></p>
+ </div>
+ <div class="hero-map"><div class="row"><span class="chip">BRAND CREATIVE</span><span class="arrow">↔</span><span class="chip">HARMELIN</span><span class="arrow">↔</span><span class="chip">INNOVID</span><span class="arrow">→</span><span class="chip">AUDIENCE</span></div></div>
+</section>
+
+<section class="section" id="who">
+ <div class="section-title">Who is who</div>
+ <div class="grid g2">
+  <div class="card agency"><div class="kicker">Independent outside partner</div><div class="logo-word harmelin">HARMELIN MEDIA</div><p><strong>Media planning and buying agency.</strong> Harmelin helps determine audiences, markets, channels, placements, budgets and media optimization. It collaborates with the brand and ad-tech teams but is not part of Mediaocean.</p></div>
+  <div class="card brand"><div class="kicker">Technology company / umbrella</div><div class="logo-word mediaocean">MEDIAOCEAN</div><p>Mediaocean owns advertising-technology businesses and platforms. Its current Innovid business combines capabilities historically associated with Innovid and Flashtalking.</p></div>
+ </div>
+ <div class="grid g3" style="margin-top:13px">
+  <div class="card brand"><div class="kicker">Brand</div><h3>Your Creative Team</h3><p><strong>WHAT:</strong> campaign concept, visual direction, imagery, copy, offers, CTA, brand rules, examples and approved creative behavior.</p></div>
+  <div class="card agency"><div class="kicker">Independent agency</div><h3>Harmelin</h3><p><strong>WHO / WHERE / HOW MUCH:</strong> audience, media strategy, channel and publisher plan, market targeting, buying and budget optimization.</p></div>
+  <div class="card iv"><div class="kicker">Mediaocean ad tech</div><h3>Innovid</h3><p><strong>WHICH VERSION / HOW:</strong> dynamic creative, ad serving, video/CTV delivery, measurement and optimization.</p></div>
+ </div>
+ <div class="callout"><strong>Important:</strong> this is collaborative, not a simple assembly line. Harmelin does not “own” Innovid, and Innovid does not replace Harmelin. They solve different parts of the advertising workflow.</div>
+</section>
+
+<section class="section" id="merger">
+ <div class="section-title">Flashtalking + Innovid: what each brought</div>
+ <div class="merge">
+  <div class="card ft"><div class="kicker">Legacy Flashtalking DNA</div><div class="logo-word flashtalking">FLASHTALKING</div><h3>Creative + DCO</h3><ul><li>Dynamic creative personalization</li><li>Creative templates and versioning</li><li>Display / social / open-web execution</li><li>Ad serving and creative intelligence</li></ul></div>
+  <div class="merge-arrow">MERGED<br>2025 →</div>
+  <div class="card iv"><div class="kicker">Legacy Innovid DNA</div><div class="logo-word innovid">INNOVID</div><h3>CTV + Video + Measurement</h3><ul><li>CTV and premium video delivery</li><li>Interactive / advanced video</li><li>Reach and frequency measurement</li><li>Cross-screen outcomes and attribution</li></ul></div>
+  <div class="merge-arrow">BECOMES →</div>
+  <div class="card now"><div class="kicker">The current direction</div><div class="logo-word innovid">INNOVID</div><h3>One omnichannel ad-tech brand</h3><ul><li><strong>Create:</strong> DCO, personalization, automation</li><li><strong>Deliver:</strong> display, social, open web, video, CTV</li><li><strong>Measure:</strong> impressions, reach, frequency, outcomes</li><li><strong>Optimize:</strong> improve media and creative with performance data</li></ul></div>
+ </div>
+</section>
+
+<section class="section">
+ <div class="formula">DCO = DATA SIGNAL + CREATIVE CONTENT + DECISION RULE → THE AD VERSION A PERSON SEES</div>
+</section>
+
+<section class="section" id="stack">
+ <div class="section-title">How a programmatic ad actually stacks up</div>
+ <p class="section-lede">This is the biggest mindset shift for production. Do not think only in terms of a flattened 300×250. Think of the 300×250 as a <strong>template that receives components</strong>. The components can be fixed or dynamic.</p>
+ <div class="stack-wrap">
+  <div class="stack">
+   <h3>Example: one dynamic 300×250</h3>
+   <div class="layer"><b>1. FIXED TEMPLATE</b><span>Logo zone, grid, typography rules, CTA style, safe areas, animation behavior.</span><code>300x250_Base.psd</code></div>
+   <div class="layer dynamic"><b>2. HERO IMAGE</b><span>Clean image; no dynamic headline, price or legal baked in.</span><code>Hero_Starlink_Family.jpg</code></div>
+   <div class="layer dynamic"><b>3. HEADLINE</b><span>Text field selected from approved message options.</span><code>headline_id=STAR_01</code></div>
+   <div class="layer dynamic"><b>4. OFFER</b><span>Speed, price, term and other offer data can be fields rather than pixels.</span><code>offer_id=MO_63080_A</code></div>
+   <div class="layer dynamic"><b>5. CTA</b><span>Controlled text or destination can change by campaign rule.</span><code>cta=SHOP_PLANS</code></div>
+   <div class="layer data"><b>6. DATA / RULE</b><span>Market, ZIP, audience, availability, competitor or other signal picks the combination.</span><code>IF competitor=Starlink</code></div>
+   <div class="layer legal"><b>7. LEGAL</b><span>Approved legal tied to the claim/offer and controlled separately when required.</span><code>legal_id=OFFER_12MO</code></div>
+   <div class="down">↓ ASSEMBLED / SERVED ↓</div>
+   <div class="ad-demo"><div class="photo">HERO IMAGE LAYER<br>clean image asset</div><div class="adcopy"><div class="headline">Your Best Internet Doesn't Come From Space</div><div class="offer">Gig Internet • Local Offer</div><div style="font-size:10px">Dynamic headline, offer, CTA and legal sit on top of the approved template.</div><span class="cta">SHOP PLANS</span></div></div>
+  </div>
+  <div class="package" id="handoff">
+   <h3>What the creative team should hand off</h3>
+   <div class="package-item"><b>1. Layered source / master template</b><br>Innovid's knowledge base specifically calls out editable PSD, Google Web Designer or After Effects files depending on the execution. For display, finalized designs are recommended as layered PSDs.</div>
+   <div class="package-item"><b>2. Reference comps</b><br>JPG/PNG/PDF examples showing the intended finished state, hierarchy, spacing, animation frames and edge cases. These are visual instructions, not necessarily the production ad itself.</div>
+   <div class="package-item"><b>3. Clean image assets</b><br>High-quality image files with dynamic text/price/legal kept separate. Innovid lists JPG/TIFF for source imagery, while dynamic display templates support SVG, PNG and JPEG assets.</div>
+   <div class="package-item"><b>4. Logos, product art and fonts</b><br>Vector logos such as AI/EPS or high-resolution PNG; relevant fonts supplied separately. Innovid also recommends limiting display creative to a small number of font files because fonts contribute to file weight.</div>
+   <div class="package-item"><b>5. Copy + offer data</b><br>A structured feed or matrix containing headlines, offers, CTA, market name, legal IDs and other values. Innovid accepts XML, CSV, Google Sheets, JSON and API feeds.</div>
+   <div class="package-item"><b>6. Mapping / decision rules</b><br>Document what stays constant, what changes, which data signal controls it, fallback behavior, character limits and legal dependencies.</div>
+   <div class="package-item"><b>7. Video / audio when applicable</b><br>Innovid lists MOV/MP4 for source video; dynamic video guidance prefers MP4 and consistent format, frame rate, duration/aspect. WAV is used for dynamic audio.</div>
+  </div>
+ </div>
+</section>
+
+<section class="section">
+ <div class="section-title">Example handoff folder</div>
+ <p class="section-lede">The exact naming convention can change, but separating reference executions, source files, dynamic assets and data makes the handoff much easier to understand.</p>
+ <pre class="tree">DCO_Handoff/
+├── 01_Reference_Executions/
+│   ├── DCO-Display_300x250-Comp-Star.jpg
+│   ├── DCO-Display_300x600-Comp-Star.jpg
+│   └── DCO-Display_728x90-Comp-Star.jpg
+├── 02_Layered_Source/
+│   ├── DCO-Display_300x250-Comp-Star.psd
+│   ├── DCO-Display_300x600-Comp-Star.psd
+│   └── DCO-Display_728x90-Comp-Star.psd
+├── 03_Dynamic_Images/
+│   ├── Hero_Starlink_Family.jpg
+│   ├── Hero_DSL_Home.jpg
+│   └── Hero_FWA_BusyHome.jpg
+├── 04_Brand_Product_Assets/
+│   ├── Sparklight_Logo_Reverse.png
+│   ├── Sparklight_Logo_Purple.png
+│   └── eero_Product.png
+├── 05_Fonts/
+│   └── Approved_Web_Fonts/
+├── 06_Data/
+│   ├── DCO_Builder.csv
+│   ├── Headline_Matrix.csv
+│   ├── Offer_Matrix.csv
+│   └── Market_Zip_Mapping.csv
+├── 07_Legal/
+│   └── Approved_Legal_Matrix.csv
+└── 08_Rules/
+    └── DCO_Decision_Mapping.xlsx</pre>
+</section>
+
+<section class="section" id="builder">
+ <div class="section-title">How the DCO Builder maps to the vendor handoff</div>
+ <p class="section-lede">Your Builder already captures many of the right planning fields. It should be thought of as the <strong>creative specification / source-of-truth layer</strong>. Innovid may transform those fields into its production template and data-feed structure rather than ingesting the Builder CSV exactly as-is. The Builder currently includes generated filenames, execution/variation, channel, size, creative brief, image direction, supporting copy, message priorities, market/ZIP, offers, legal and strategy fields.</p>
+ <div class="crosswalk"><table>
+  <thead><tr><th>DCO Builder field</th><th>What it means to creative</th><th>Likely handoff destination</th><th>Example</th></tr></thead>
+  <tbody>
+   <tr><td><code>Execution / Variation</code></td><td>Names the creative route and specific version.</td><td>Template / campaign taxonomy + file naming</td><td><code>Comp / Star</code></td></tr>
+   <tr><td><code>Channel / Size</code></td><td>Defines where the idea must work and which canvases need design.</td><td>Template dimensions / production specs</td><td><code>Display / 300x250</code></td></tr>
+   <tr><td><code>Creative_Brief</code></td><td>Explains the concept, hierarchy and guardrails.</td><td>Producer / developer build instructions</td><td>Make eero the proof point; offer TBD.</td></tr>
+   <tr><td><code>Image_Description_Prompt</code></td><td>Art direction for the hero asset.</td><td>Image library / production request</td><td>Busy multi-device household.</td></tr>
+   <tr><td><code>Image_Asset</code></td><td>The actual selected visual.</td><td>Innovid asset library / dynamic image URL</td><td><code>Hero_FWA_BusyHome.jpg</code></td></tr>
+   <tr><td><code>Message_1...5</code></td><td>On-ad copy ordered by importance.</td><td>Dynamic text fields / feed columns</td><td>Headline, proof point, tertiary line</td></tr>
+   <tr><td><code>Message_*_Required</code></td><td>Defines what cannot disappear in small sizes.</td><td>Template logic / fallback rules</td><td>Headline required; proof point optional</td></tr>
+   <tr><td><code>Offer_*</code></td><td>Structured offer components.</td><td>Dynamic feed columns</td><td>1 Gig / $49.95 / 12 mos.</td></tr>
+   <tr><td><code>Market_Zip / Target</code></td><td>Describes where/for whom the variation is valid.</td><td>Decision rules + media/audience mapping</td><td>Starlink-competitive ZIPs</td></tr>
+   <tr><td><code>Legal_Full / Legal_Short</code></td><td>Approved legal language and size fallback.</td><td>Legal dynamic field / mapping</td><td>Short display legal vs full landing/legal copy</td></tr>
+   <tr><td><code>AMJ_*</code></td><td>Strategy, test question, audience and dynamic-field planning.</td><td>Campaign strategy / QA / decision mapping</td><td>What stays constant vs changes dynamically</td></tr>
+  </tbody>
+ </table></div>
+ <div class="callout"><strong>The Builder is doing something valuable:</strong> it separates the human creative decision from the machine-friendly identifiers and filenames. That is exactly the kind of discipline DCO needs. The next step is to connect each record to a real asset library and explicit field mapping for the vendor build.</div>
+</section>
+
+<section class="section">
+ <div class="section-title">File types: what is actually useful</div>
+ <div class="grid g3">
+  <div class="card"><h3>Design / source</h3><span class="filetype">PSD</span><span class="filetype">GWD</span><span class="filetype">AE</span><p>Editable source used to understand layers, spacing, animation and construction. Innovid specifically calls these out in its dynamic asset requirements.</p></div>
+  <div class="card"><h3>Images / logos</h3><span class="filetype">JPG</span><span class="filetype">PNG</span><span class="filetype">SVG</span><span class="filetype">TIFF</span><span class="filetype">AI</span><span class="filetype">EPS</span><p>Use clean, high-quality assets. For dynamic display, keep image types and dimensions consistent for a given placeholder.</p></div>
+  <div class="card"><h3>Data / copy</h3><span class="filetype">CSV</span><span class="filetype">JSON</span><span class="filetype">XML</span><span class="filetype">Google Sheet</span><span class="filetype">API</span><p>Structured fields supply dynamic values and asset URLs. This is where message, offer, market and legal matrices become programmatic.</p></div>
+ </div>
+</section>
+
+<section class="section">
+ <div class="section-title">Build it this way, not that way</div>
+ <div class="goodbad">
+  <div class="good"><h3>✓ Better for DCO</h3><ul><li>Layered source file with clearly named frames/layers</li><li>Hero image separated from headline and offer</li><li>Long-copy and short-copy edge cases designed up front</li><li>Consistent dynamic image dimensions and file types</li><li>Offer, market and legal values in structured fields</li><li>Reference comps for each major size family</li><li>Clear rules for what is fixed, dynamic, optional and required</li></ul></div>
+  <div class="bad"><h3>✕ Harder for DCO</h3><ul><li>Only flattened JPGs with every message baked into pixels</li><li>One huge Photoshop file with unlabeled layers</li><li>Different crop/aspect behavior for every dynamic image without rules</li><li>Price or legal permanently embedded into hero photography</li><li>Copy supplied only in emails or comments instead of structured data</li><li>No fallback for smaller units or unusually long market names</li><li>Assuming the vendor will infer which claim belongs to which audience</li></ul></div>
+ </div>
+</section>
+
+<section class="section" id="glossary">
+ <div class="section-title">Quick glossary</div>
+ <div class="glossary">
+  <div class="term"><b>DCO — Dynamic Creative Optimization</b><span>Using data and rules to personalize and optimize creative elements and messages.</span></div>
+  <div class="term"><b>Dynamic asset</b><span>An image, video, text, audio or other element that can change between versions.</span></div>
+  <div class="term"><b>Template</b><span>The structural ad build that controls layout, animation and how dynamic elements behave.</span></div>
+  <div class="term"><b>Feed</b><span>Structured data supplying values or asset URLs used by the creative.</span></div>
+  <div class="term"><b>Decision rule</b><span>The logic that connects a data condition to a specific creative component or version.</span></div>
+  <div class="term"><b>Ad server</b><span>Technology that serves and tracks digital ads.</span></div>
+  <div class="term"><b>Programmatic</b><span>Automated digital-media buying using technology and data.</span></div>
+  <div class="term"><b>DSP</b><span>Demand-Side Platform used by media buyers to purchase programmatic inventory.</span></div>
+  <div class="term"><b>CTV</b><span>Internet-connected television viewing through smart TVs and streaming devices.</span></div>
+  <div class="term"><b>Impression</b><span>One recorded instance of an ad being served.</span></div>
+  <div class="term"><b>CTA</b><span>Call to Action, such as Shop Plans or Learn More.</span></div>
+  <div class="term"><b>Fallback</b><span>The approved default used when data is missing or a dynamic condition cannot be met.</span></div>
+ </div>
+</section>
+
+<section class="section">
+ <div class="section-title">Vendor-source notes</div>
+ <div class="sourcebox">
+  This handoff guidance is grounded in Innovid's published knowledge-base guidance. Particularly useful references:
+  <ul>
+   <li><a href="https://help.innovid.com/hc/en-us/articles/360012957097-Understanding-Dynamic-Asset-Requirements">Understanding Dynamic Asset Requirements</a> — editable PSD/GWD/AE files, brand assets, images, fonts, video and accepted data-feed types.</li>
+   <li><a href="https://help.innovid.com/hc/en-us/articles/7337983085981-Creative-Best-Practices-and-Asset-Guidelines">Creative Best Practices and Asset Guidelines</a> — display/video/CTV asset preparation.</li>
+   <li><a href="https://help.innovid.com/hc/en-us/articles/360016284518-Dynamic-Display-Templates">Dynamic Display Templates</a> — dynamic image formats, consistency and file-weight guidance.</li>
+   <li><a href="https://help.innovid.com/hc/en-us/articles/360012957117-Introduction-To-Innovid-Dynamic-Creative">Introduction to Innovid Dynamic Creative</a> — DCO as data + content + strategy.</li>
+  </ul>
+  Final production specs should still be confirmed with the assigned Innovid/Flashtalking producer or technical project manager because execution type and platform workflow determine the exact deliverables.
+ </div>
+</section>
+
+<footer><span>DCO Ecosystem & Creative Handoff Guide</span><span>Simple mental model: <strong>Creative = WHAT • Harmelin = WHO/WHERE/HOW MUCH • Innovid = WHICH VERSION/HOW</strong></span></footer>
+</main>
+</body>
+</html>
