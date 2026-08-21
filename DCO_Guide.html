@@ -173,11 +173,12 @@ footer{margin-top:30px;padding-top:14px;border-top:1px solid var(--line);font-si
 
 <section class="section" id="builder">
  <div class="section-title">How the DCO Builder maps to the vendor handoff</div>
- <p class="section-lede">Your Builder already captures many of the right planning fields. It should be thought of as the <strong>creative specification / source-of-truth layer</strong>. Innovid may transform those fields into its production template and data-feed structure rather than ingesting the Builder CSV exactly as-is. The Builder currently includes generated filenames, execution/variation, channel, size, creative brief, image direction, supporting copy, message priorities, market/ZIP, offers, legal and strategy fields.</p>
+ <p class="section-lede">Your Builder already captures many of the right planning fields. It should be thought of as the <strong>creative specification / source-of-truth layer</strong>. Innovid may transform those fields into its production template and data-feed structure rather than ingesting the Builder CSV exactly as-is. The Builder currently includes generated filenames, execution/creative version, CE-Code, channel, size, creative brief, image direction, supporting copy, message priorities, market/ZIP, offers, legal and strategy fields.</p>
  <div class="crosswalk"><table>
   <thead><tr><th>DCO Builder field</th><th>What it means to creative</th><th>Likely handoff destination</th><th>Example</th></tr></thead>
   <tbody>
-   <tr><td><code>Execution / Variation</code></td><td>Names the creative route and specific version.</td><td>Template / campaign taxonomy + file naming</td><td><code>Comp / Star</code></td></tr>
+   <tr><td><code>Execution / Creative Version</code></td><td>Names the creative route and human-readable version.</td><td>Template / campaign taxonomy</td><td><code>Competitive Differentiation / Starlink</code></td></tr>
+   <tr><td><code>CE_Code</code></td><td>Machine-safe Creative Execution Code used to identify the approved execution in filenames and handoff data.</td><td>Creative taxonomy + file naming + vendor mapping</td><td><code>01-EERO_FIBER_COMP</code></td></tr>
    <tr><td><code>Channel / Size</code></td><td>Defines where the idea must work and which canvases need design.</td><td>Template dimensions / production specs</td><td><code>Display / 300x250</code></td></tr>
    <tr><td><code>Creative_Brief</code></td><td>Explains the concept, hierarchy and guardrails.</td><td>Producer / developer build instructions</td><td>Make eero the proof point; offer TBD.</td></tr>
    <tr><td><code>Image_Description_Prompt</code></td><td>Art direction for the hero asset.</td><td>Image library / production request</td><td>Busy multi-device household.</td></tr>
@@ -185,11 +186,12 @@ footer{margin-top:30px;padding-top:14px;border-top:1px solid var(--line);font-si
    <tr><td><code>Message_1...5</code></td><td>On-ad copy ordered by importance.</td><td>Dynamic text fields / feed columns</td><td>Headline, proof point, tertiary line</td></tr>
    <tr><td><code>Message_*_Required</code></td><td>Defines what cannot disappear in small sizes.</td><td>Template logic / fallback rules</td><td>Headline required; proof point optional</td></tr>
    <tr><td><code>Offer_*</code></td><td>Structured offer components.</td><td>Dynamic feed columns</td><td>1 Gig / $49.95 / 12 mos.</td></tr>
-   <tr><td><code>Market_Zip / Target</code></td><td>Describes where/for whom the variation is valid.</td><td>Decision rules + media/audience mapping</td><td>Starlink-competitive ZIPs</td></tr>
+   <tr><td><code>Market_Zip / Target</code></td><td>Describes where/for whom the creative version is valid.</td><td>Decision rules + media/audience mapping</td><td>Starlink-competitive ZIPs</td></tr>
    <tr><td><code>Legal_Full / Legal_Short</code></td><td>Approved legal language and size fallback.</td><td>Legal dynamic field / mapping</td><td>Short display legal vs full landing/legal copy</td></tr>
    <tr><td><code>AMJ_*</code></td><td>Strategy, test question, audience and dynamic-field planning.</td><td>Campaign strategy / QA / decision mapping</td><td>What stays constant vs changes dynamically</td></tr>
   </tbody>
  </table></div>
+ <div class="callout"><strong>CE-Code is the Creative Execution Code:</strong> it replaces the older Version Code terminology. The human-readable Creative Version describes the route; <code>CE_Code</code> is the stable machine-safe identifier used for filenames, exports and vendor handoff.</div>
  <div class="callout"><strong>The Builder is doing something valuable:</strong> it separates the human creative decision from the machine-friendly identifiers and filenames. That is exactly the kind of discipline DCO needs. The next step is to connect each record to a real asset library and explicit field mapping for the vendor build.</div>
 </section>
 
