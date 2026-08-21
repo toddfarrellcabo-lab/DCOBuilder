@@ -27,7 +27,7 @@ th,td{padding:8px 9px;border-bottom:1px solid #eee;border-right:1px solid #f1eef
 th{position:sticky;top:0;background:#f5eff8;text-align:left;color:#50365a;font-size:10px;text-transform:uppercase;z-index:2;cursor:pointer;user-select:none}
 th:hover{background:#ede3f2}
 .sortmark{font-size:9px;color:var(--p);margin-left:4px}
-.rowbtns{white-space:nowrap} .rowbtns button{padding:5px 7px;font-size:10px;margin-right:3px}
+.rowbtns{white-space:normal;display:flex;flex-wrap:wrap;gap:4px;align-content:flex-start} .rowbtns button{padding:5px 7px;font-size:10px;margin:0;flex:0 0 auto;white-space:nowrap}
 .record-id{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:10px;font-weight:800;color:var(--p)}
 .code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;background:#f8f5fa;border-radius:4px;padding:2px 4px;font-size:10px}
 .details{font-size:11px;line-height:1.4}.priority-list{margin:0;padding-left:16px;font-size:11px;line-height:1.35}.priority-list li{margin:0 0 3px}.priority-list .required{font-weight:800;color:var(--p)} .filename{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:10px;display:block;margin:3px 0}
@@ -186,7 +186,7 @@ label{display:block;margin-bottom:4px;font-size:10px;font-weight:800;text-transf
 
 <div class="tablewrap"><table><thead><tr>
 <th style="width:115px" onclick="sortBy('Record_ID')">ID<span class="sortmark" data-sort="Record_ID"></span></th>
-<th style="width:125px">Actions</th>
+<th style="width:175px">Actions</th>
 <th style="width:150px" onclick="sortBy('Execution')">Execution<span class="sortmark" data-sort="Execution"></span></th>
 <th style="width:115px" onclick="sortBy('Variation')">Variation<span class="sortmark" data-sort="Variation"></span></th>
 <th style="width:80px" onclick="sortBy('Channel')">Channel<span class="sortmark" data-sort="Channel"></span></th>
