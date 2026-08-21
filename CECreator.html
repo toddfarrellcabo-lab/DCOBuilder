@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DCO Creative Execution Creator</title>
+<style>
+:root{--p:#71188e;--ink:#24202a;--muted:#706a76;--line:#ddd7e3;--bg:#f6f4f8;--soft:#f2eaf5}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:Segoe UI,Arial,sans-serif;color:var(--ink)}
+.page{width:min(1120px,100%);margin:0 auto;background:#fff;min-height:100vh;box-shadow:0 0 28px #00000010}
+.head{position:sticky;top:0;z-index:4;background:#fff;border-bottom:1px solid var(--line);padding:14px 17px;display:flex;justify-content:space-between;gap:12px;align-items:center}
+.brand{display:flex;align-items:center;gap:12px}.brand img{height:30px;max-width:180px;object-fit:contain}.title{font-weight:800;font-size:16px}.sub{font-size:11px;color:var(--muted);margin-top:3px}
+.body{padding:17px}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:11px}.wide{grid-column:span 3}.two{grid-column:span 2}
+label{display:block;margin-bottom:4px;font-size:10px;font-weight:800;text-transform:uppercase;color:#504756}
+input,select,textarea{width:100%;border:1px solid var(--line);border-radius:7px;padding:8px 9px;font:inherit;background:#fff}textarea{min-height:86px;resize:vertical}
+button{border:1px solid var(--line);background:#fff;border-radius:8px;padding:9px 12px;font-weight:700;cursor:pointer}button.primary{background:var(--p);border-color:var(--p);color:#fff}button.link{border:0;background:transparent;color:var(--p);padding:4px 1px;font-size:11px}
+.choice-row{display:grid;grid-template-columns:1fr auto;gap:6px;align-items:start}.section{grid-column:span 3;border-top:1px solid var(--line);padding-top:12px;margin-top:4px}.section-title{font-weight:800;color:var(--p);font-size:12px;margin-bottom:5px}
+.cebox{background:#faf8fb;border:1px solid var(--line);border-radius:8px;padding:10px}.code{font-family:Consolas,monospace;font-weight:800;color:var(--p)}
+.offer{grid-column:span 3;background:#faf8fb;border:1px solid var(--line);border-radius:9px;padding:10px}.offer-grid{display:grid;grid-template-columns:2fr .7fr .7fr .9fr 1fr;gap:8px;align-items:end}.previewline{font-size:10px;color:var(--muted);margin-top:7px}
+.assetbox{display:grid;grid-template-columns:180px 1fr;gap:12px;align-items:start}.asset-preview{height:130px;border:1px dashed #b9afbf;border-radius:9px;background:#faf8fb;display:flex;align-items:center;justify-content:center;overflow:hidden;color:var(--muted);font-size:11px;text-align:center;padding:8px}.asset-preview img{width:100%;height:100%;object-fit:cover}.asset-tip{font-size:10px;color:var(--muted);margin-top:7px;line-height:1.4}
+.msglist{display:flex;flex-direction:column;gap:7px}.msg{display:grid;grid-template-columns:30px 1fr 110px auto;gap:7px;align-items:center}.num{width:25px;height:25px;border-radius:50%;background:var(--p);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800}.req{display:flex;align-items:center;gap:5px;font-size:10px;font-weight:700}.req input{width:auto}
+.logo{background:#f8f5f9;border:1px solid var(--line);border-radius:8px;padding:11px}.logo-options{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:9px}.logo-card{background:#fff;border:1px solid var(--line);border-radius:7px;padding:8px;text-align:center}.logo-card.dark{background:#333}.logo-card img{max-width:100%;height:28px;object-fit:contain}.logo-card small{display:block;font-size:9px;color:var(--muted);margin-top:5px}.logo-card.dark small{color:#ddd}
+.foot{position:sticky;bottom:0;background:#fff;border-top:1px solid var(--line);padding:13px 17px;display:flex;justify-content:flex-end;gap:8px}.notice{background:#f8f5fa;border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:11px;color:var(--muted)}
+@media(max-width:850px){.grid{grid-template-columns:1fr}.wide,.two,.section,.offer{grid-column:span 1}.offer-grid,.assetbox{grid-template-columns:1fr}.logo-options{grid-template-columns:repeat(2,1fr)}.msg{grid-template-columns:30px 1fr}.page{box-shadow:none}}
+</style>
+</head>
+<body>
+<div class="page">
+<div class="head">
+  <div class="brand"><img src="assets/Sparklight(R)-purple-rgb.png" alt="Sparklight" onerror="this.style.display='none'"><div><div class="title">Create Creative Execution</div><div class="sub">Standalone DCO intake form. Choose approved naming values; add new values only when genuinely needed.</div></div></div>
+  <div class="code" id="topCode">CE-TBD</div>
+</div>
+<div class="body"><div class="grid">
+  <div><label>Record ID</label><input id="RecordID" placeholder="DCO-NEW" value="DCO-NEW"></div>
+  <div><label>Execution</label><div class="choice-row"><select id="Execution" onchange="executionChanged()"></select><button class="link" type="button" onclick="addExecution()">+ Add Execution</button></div></div>
+  <div><label>Variation</label><div class="choice-row"><select id="Variation" onchange="refreshCE()"></select><button class="link" type="button" onclick="addVariation()">+ Add Variation</button></div></div>
+
+  <div><label>Channel</label><select id="Channel"><option>Display</option><option>Social</option><option>Landing Page</option><option>Email</option><option>OLV</option><option>CTV</option></select></div>
+  <div><label>Size</label><select id="Size"><option>Full Set</option><option>160x600</option><option>300x50</option><option>300x250</option><option>300x600</option><option>320x50</option><option>728x90</option><option>970x90</option><option>970x250</option></select></div>
+  <div><label>Pillar</label><select id="Pillar"><option>Technology Leadership</option><option>Value and Included Benefits</option><option>Competitive Advantage</option><option>Market Events</option><option>Network Performance</option></select></div>
+
+  <div><label>Status</label><select id="Status"><option>Draft</option><option>Current</option><option>Approved</option><option>Inactive</option></select></div>
+  <div><label>Market / ZIP</label><input id="MarketZip" placeholder="TBD"></div>
+  <div><label>Visual Variation Count</label><input id="VariationCount" type="number" min="1" value="1"></div>
+
+  <div class="two"><label>Target</label><input id="Target"></div>
+  <div><label>Equipment Included?</label><select id="EquipmentIncluded" onchange="refreshCE()"><option value="">No</option><option value="Y">Yes (EQ)</option></select></div>
+  <div><label>Modifier Codes</label><input id="ModifierCodes" placeholder="OOK, NP" oninput="refreshCE()"></div>
+  <div class="two"><label>Generated CE-Code</label><div class="cebox code" id="CECode">CE-TBD</div></div>
+
+  <div class="offer"><div class="section-title">Offer Builder</div><div class="offer-grid">
+    <div><label>Speed</label><input id="OfferSpeed" placeholder="500 Mbps"></div>
+    <div><label>Dollars</label><input id="OfferDollars" inputmode="numeric" placeholder="49"></div>
+    <div><label>Cents</label><input id="OfferCents" inputmode="numeric" placeholder="95"></div>
+    <div><label>Term</label><input id="OfferTerm" placeholder="12 mos."></div>
+    <div><label>Regular Rate</label><input id="OfferRegularRate" placeholder="95.00"></div>
+  </div><div class="previewline" id="offerPreview">Preview: No offer entered.</div></div>
+
+  <div class="section"><div class="section-title">Creative Brief</div></div>
+  <div class="wide"><textarea id="CreativeBrief"></textarea></div>
+
+  <div class="section"><div class="section-title">Image Description / Prompt</div></div>
+  <div class="wide"><textarea id="ImagePrompt"></textarea></div>
+  <div class="wide assetbox"><div class="asset-preview" id="imgPreview">No image selected</div><div><label>Image Asset</label><input id="ImageAsset" placeholder="uploads/example.jpg" oninput="showImage()"><div class="asset-tip">This public creator stores an image path/reference only. Actual file upload remains an internal DCO Builder function.</div></div></div>
+
+  <div class="section"><div class="section-title">Supporting Copy (not on ad)</div><div class="sub">Accompanying copy used outside the image file, such as post text or caption.</div></div>
+  <div class="wide"><textarea id="SupportingCopy"></textarea></div>
+
+  <div class="section"><div class="section-title">Message Priority (on-ad messages)</div><div class="sub">Required messages never drop. Remaining messages survive according to priority and available space.</div></div>
+  <div class="wide"><div id="messages" class="msglist"></div><button type="button" style="margin-top:7px" onclick="addMessage()">+ Message</button></div>
+
+  <div class="section"><div class="section-title">Legal / Approval</div></div>
+  <div class="wide"><label>Legal Full</label><textarea id="LegalFull"></textarea></div>
+  <div class="wide"><label>Legal Short</label><textarea id="LegalShort"></textarea></div>
+  <div class="wide"><label>Approval Notes</label><textarea id="ApprovalNotes"></textarea></div>
+
+  <div class="section"><div class="section-title">Always Reserved Logo Area</div></div>
+  <div class="wide logo"><strong>Sparklight logo</strong> — template space is always reserved.<div class="logo-options">
+    <div class="logo-card"><img src="assets/Sparklight(R)-black-rgb.png" alt="Black"><small>Black</small></div>
+    <div class="logo-card"><img src="assets/Sparklight(R)-gray-rgb.png" alt="Gray"><small>Gray</small></div>
+    <div class="logo-card"><img src="assets/Sparklight(R)-purple-rgb.png" alt="Purple"><small>Purple</small></div>
+    <div class="logo-card dark"><img src="assets/Sparklight(R)-reverse-rgb.png" alt="Reverse"><small>Reverse</small></div>
+  </div></div>
+
+  <div class="wide notice">This standalone page does not write directly into the internal dashboard. Use <b>Download Submission</b> and import the file into DCO Builder 2.0. That keeps the shareable form safe for GitHub Pages/SharePoint while the internal dashboard remains the system of record.</div>
+</div></div>
+<div class="foot"><button type="button" onclick="resetForm()">Clear</button><button type="button" onclick="downloadCSV()">Download CSV</button><button class="primary" type="button" onclick="downloadJSON()">Download Submission</button></div>
+</div>
+<script>
+const DEFAULT_LIBRARY={
+"Fiber Technology":{"code":"FIB","variations":{"Fiber":"FIB","Fiber for Streamers":"FIB-STR","Fiber for Gamers":"FIB-GMR"}},
+"2 Gig Targeting":{"code":"2G","variations":{"2 Gig":"2G","2 Gig Multi User Household":"2G-MULTI"}},
+"Equipment Included":{"code":"EQ","variations":{"Equipment Included":"EQ","Equipment Included Family Value":"EQ-FAM"}},
+"Mobile Differentiator":{"code":"MOB","variations":{"Mobile 1 Year Free":"MOB-1Y","Mobile Three Benefits":"MOB-3BEN"}},
+"Competitive Differentiation":{"code":"COMP","variations":{"eero Whole Home Coverage":"EERO-COV","eero Security":"EERO-SEC","eero Device Management":"EERO-MGT","eero Busy Connected Home":"EERO-BUSY","FWA 5G Faster Internet":"FW-FAST","FWA 5G Faster Upload":"FW-UP","FWA 5G Responsiveness":"FW-RSP","FWA 5G Reliability":"FW-REL","MetroNet":"MNET","Named Competitor Comparison":"COMP","DSL":"DSL","Starlink":"STAR"}},
+"Superior Network Performance":{"code":"NET","variations":{"Opensignal Network Leadership":"NTWRK-OS","Reliability Work From Home":"REL-WFH","Reliability Family Everyday":"REL-FAM"}},
+"Competitor Outage Response":{"code":"OUT","variations":{"Competitor Outage":"OUT","Local Support":"OUT-LOCAL"}}
+};
+let library=JSON.parse(localStorage.getItem('DCO2_creator_library')||'null')||DEFAULT_LIBRARY;
+function E(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function ceCode(){let ex=document.getElementById('Execution').value,v=document.getElementById('Variation').value,eq=document.getElementById('EquipmentIncluded').value,mods=document.getElementById('ModifierCodes').value;let code=library[ex]?.variations?.[v]||String(v||'TBD').toUpperCase().replace(/[^A-Z0-9]+/g,'-').replace(/^-|-$/g,'');let parts=['CE',...code.split('-').filter(Boolean)];if(eq==='Y'&&parts[parts.length-1]!=='EQ')parts.push('EQ');String(mods||'').split(',').map(x=>x.toUpperCase().replace(/[^A-Z0-9]+/g,'')).filter(Boolean).forEach(m=>{if(!parts.includes(m))parts.push(m)});return parts.join('-')}
+function buildExecution(sel=''){let s=document.getElementById('Execution');s.innerHTML=Object.keys(library).map(x=>`<option ${x===sel?'selected':''}>${E(x)}</option>`).join('');executionChanged()}
+function executionChanged(){let ex=document.getElementById('Execution').value,v=document.getElementById('Variation'),cur=v.value;let vars=Object.keys(library[ex]?.variations||{});v.innerHTML=vars.map(x=>`<option ${x===cur?'selected':''}>${E(x)}</option>`).join('');refreshCE()}
+function refreshCE(){let code=ceCode();document.getElementById('CECode').textContent=code;document.getElementById('topCode').textContent=code}
+function addExecution(){let name=prompt('New Execution name:');if(!name)return;name=name.trim();if(!name)return;let code=(prompt('Short execution code:',name.toUpperCase().replace(/[^A-Z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,10))||'').trim();library[name]={code,variations:{}};persistLib();buildExecution(name);document.getElementById('Execution').value=name;addVariation()}
+function addVariation(){let ex=document.getElementById('Execution').value;if(!ex)return;let name=prompt(`New Variation under ${ex}:`);if(!name)return;name=name.trim();if(!name)return;let code=(prompt('Short variation code used in CE-Code:',name.toUpperCase().replace(/[^A-Z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,16))||'').trim();library[ex].variations[name]=code;persistLib();executionChanged();document.getElementById('Variation').value=name;refreshCE()}
+function persistLib(){localStorage.setItem('DCO2_creator_library',JSON.stringify(library))}
+function addMessage(m={priority:'',required:false,message:''}){let box=document.getElementById('messages'),n=box.children.length+1,d=document.createElement('div');d.className='msg';d.innerHTML=`<div class="num">${n}</div><input class="mt" value="${E(m.message||'')}" placeholder="Priority message ${n}"><label class="req"><input class="mr" type="checkbox" ${m.required?'checked':''}> REQUIRED</label><button type="button" onclick="this.parentElement.remove();renumber()">×</button>`;box.appendChild(d)}
+function renumber(){[...document.querySelectorAll('.msg .num')].forEach((x,i)=>x.textContent=i+1)}
+function getMessages(){return [...document.querySelectorAll('#messages .msg')].map((d,i)=>({Priority:i+1,Required:d.querySelector('.mr').checked?'1':'0',Message:d.querySelector('.mt').value.trim()})).filter(x=>x.Message)}
+function value(id){return document.getElementById(id).value.trim()}
+function offerPrice(){let d=value('OfferDollars'),c=value('OfferCents');if(!d&&!c)return'';return `${d||'0'}.${String(c||'00').padStart(2,'0').slice(0,2)}`}
+function buildSubmission(){return {schema:'DCO-Creative-Submission-2.0',submittedAt:new Date().toISOString(),creative:{RecordID:value('RecordID'),Execution:value('Execution'),Variation:value('Variation'),EquipmentIncluded:value('EquipmentIncluded'),ModifierCodes:value('ModifierCodes'),CECode:document.getElementById('CECode').textContent,VariationCount:String(Math.max(1,parseInt(value('VariationCount')||'1'))),Pillar:value('Pillar'),Target:value('Target'),MarketZip:value('MarketZip'),Channel:value('Channel'),Size:value('Size'),Status:value('Status'),CreativeBrief:value('CreativeBrief'),ImagePrompt:value('ImagePrompt'),ImageAsset:value('ImageAsset'),SupportingCopy:value('SupportingCopy'),OfferSpeed:value('OfferSpeed'),OfferPrice:offerPrice(),OfferTerm:value('OfferTerm'),OfferRegularRate:value('OfferRegularRate'),LegalFull:value('LegalFull'),LegalShort:value('LegalShort'),ApprovalNotes:value('ApprovalNotes')},messages:getMessages()}}
+function downloadBlob(name,text,type){let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type}));a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+function downloadJSON(){let p=buildSubmission(),name=(p.creative.CECode||'CE-Submission')+'.json';downloadBlob(name,JSON.stringify(p,null,2),'application/json')}
+function csvEscape(v){v=String(v??'');return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v}
+function downloadCSV(){let p=buildSubmission(),r=p.creative;r.MessagesJSON=JSON.stringify(p.messages);let h=Object.keys(r),txt=h.join(',')+'\n'+h.map(k=>csvEscape(r[k])).join(',');downloadBlob((r.CECode||'CE-Submission')+'.csv',txt,'text/csv')}
+function showImage(){let path=value('ImageAsset'),p=document.getElementById('imgPreview');p.innerHTML=path?`<img src="${E(path)}" onerror="this.parentElement.textContent='Image path set'">`:'No image selected'}
+function resetForm(){if(!confirm('Clear this form?'))return;document.querySelectorAll('input,textarea').forEach(e=>{if(e.id==='RecordID')e.value='DCO-NEW';else if(e.id==='VariationCount')e.value='1';else e.value=''});document.getElementById('Status').value='Draft';document.getElementById('EquipmentIncluded').value='';document.getElementById('messages').innerHTML='';for(let i=0;i<5;i++)addMessage();refreshCE();showImage()}
+['OfferSpeed','OfferDollars','OfferCents','OfferTerm','OfferRegularRate'].forEach(id=>document.addEventListener('input',e=>{if(e.target.id===id){let p=offerPrice(),s=value('OfferSpeed'),t=value('OfferTerm'),r=value('OfferRegularRate');document.getElementById('offerPreview').textContent=(s||p||t||r)?`Preview: ${s||'Internet'}${p?' for $'+p:''}${t?' per mo. for '+t:''}${r?' · Reg. rate $'+r:''}`:'Preview: No offer entered.'}}));
+buildExecution();for(let i=0;i<5;i++)addMessage();refreshCE();
+</script>
+</body></html>
